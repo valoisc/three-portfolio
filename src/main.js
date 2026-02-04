@@ -15,8 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Conteúdos
-  const CASES = {
+  // Conte�dos
+    const CASES = {
     lastampa: {
       title: 'La Stampa Run',
       meta: ['Branding', 'UX/UI', 'Experiência', 'Growth'],
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
         },
       ],
 
-      // ✅ imagens + vídeos inline no mesmo grid
+      // imagens + vídeos inline no mesmo grid
       media: [
         { type: 'image', src: '/images/laestamparun/evento.heic', alt: 'Evento - Foto retirada por mim' },
         { type: 'image', src: '/images/laestamparun/1.png', alt: 'Material em que fiz o Design' },
@@ -53,34 +53,34 @@ window.addEventListener('DOMContentLoaded', () => {
       ],
     },
     unidentis: {
-  title: 'Unidentis',
-  meta: [ 'CRO', 'Healthtech', 'Compliance'],
-  intro:
-    'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível à confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas à conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
-  sections: [
-    {
-      h2: 'Contexto',
-      p:
-        'A Unidentis atua no segmento de planos odontológicos, um contexto onde o excesso de informação, linguagem técnica e exigências regulatórias frequentemente geram fricção e dificultam a tomada de decisão do usuário.'
-    },
-    {
-      h2: 'O desafio',
-      p:
-        'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar à conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.'
-    },
-    {
-      h2: 'Minha atuação',
-      p:
-        'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas à performance e escalabilidade. Estruturando o setor de marketing da Unidentis '
-    },
-    {
-      h2: 'Resultado',
-      p:
-        'Os materiais fortaleceram a presença digital da marca e contribuíram para campanhas mais claras e eficientes, alinhando impacto visual, consistência de marca e foco em conversão. No primeiro ano, o digital faturou mais do que as concessionária de planos!'
-    }
-  ],
+      title: 'Unidentis',
+      meta: ['CRO', 'Healthtech', 'Compliance'],
+      intro:
+        'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível à confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas à conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
+      sections: [
+        {
+          h2: 'Contexto',
+          p:
+            'A Unidentis atua no segmento de planos odontológicos, um contexto onde o excesso de informação, linguagem técnica e exigências regulatórias frequentemente geram fricção e dificultam a tomada de decisão do usuário.'
+        },
+        {
+          h2: 'O desafio',
+          p:
+            'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar à conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.'
+        },
+        {
+          h2: 'Minha atuação',
+          p:
+            'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas à performance e escalabilidade. Estruturando o setor de marketing da Unidentis '
+        },
+        {
+          h2: 'Resultado',
+          p:
+            'Os materiais fortaleceram a presença digital da marca e contribuíram para campanhas mais claras e eficientes, alinhando impacto visual, consistência de marca e foco em conversão. No primeiro ano, o digital faturou mais do que as concessionárias de planos!'
+        }
+      ],
 
-      // ✅ imagens + vídeos inline no mesmo grid
+      // imagens + vídeos inline no mesmo grid
       media: [
         { type: 'image', src: '/images/unidentis/1.png', alt: 'Cartão de credenciado ' },
         { type: 'image', src: '/images/unidentis/2.jpg', alt: 'Material em que fiz o Design' },
@@ -111,11 +111,11 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         {
           h2: 'Resultado',
-          p: 'No primeiro mês de trabalho de rebranding, a marca conseguiu em seu canal próprio de vendas alcançar seu primeiro faturamento recorde, não somente como experienciou um resultado positivo de LTV aumentando o retorno de clientes em até 80%',
+          p: 'No primeiro mês de trabalho de rebranding, a marca conseguiu em seu canal próprio de vendas alcançar seu primeiro faturamento recorde, não somente como experienciou um resultado positivo de LTV aumentando o retorno de clientes em até 80%'
         },
       ],
 
-      // ✅ imagens + vídeos inline no mesmo grid
+      // imagens + vídeos inline no mesmo grid
       media: [
         { type: 'image', src: '/images/meltz/1.png', alt: 'Logotipo' },
         { type: 'image', src: '/images/meltz/2.png', alt: 'Logotipo' },
@@ -130,7 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   /* =========================
      PORTFOLIO SCROLL STATE
-     (ativa blur do header só quando rolar)
+     (ativa blur do header s� quando rolar)
      ========================= */
   const portfolio = document.getElementById('portfolio');
   if (portfolio) {
@@ -166,8 +166,8 @@ window.addEventListener('DOMContentLoaded', () => {
         )
         .join('') ?? '';
 
-    // ✅ Suporta o novo "media" (imagem + vídeo)
-    // 🔁 E mantém compatível com cases antigos que usam "images"
+    // ? Suporta o novo "media" (imagem + v�deo)
+    // ?? E mant�m compat�vel com cases antigos que usam "images"
     const mediaArray = Array.isArray(c.media)
       ? c.media
       : Array.isArray(c.images)
@@ -226,7 +226,7 @@ window.addEventListener('DOMContentLoaded', () => {
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
 
-    // “pulo” leve a partir da thumb (opcional)
+    // "pulo" leve a partir da thumb (opcional)
     if (thumbEl && shell) {
       const from = thumbEl.getBoundingClientRect();
       const to = shell.getBoundingClientRect();
@@ -250,7 +250,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!isOpen) return;
     isOpen = false;
 
-    // pausa vídeos quando fecha (UX)
+    // pausa v�deos quando fecha (UX)
     content.querySelectorAll('video').forEach((v) => v.pause());
 
     overlay.classList.remove('is-open');
@@ -258,7 +258,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.documentElement.style.overflow = '';
   }
 
-  // ✅ UX: ao dar play em um vídeo, pausa os outros
+  // ? UX: ao dar play em um v�deo, pausa os outros
   content.addEventListener(
     'play',
     (e) => {
@@ -281,7 +281,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // fechar: botão X
+  // fechar: bot�o X
   closeBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();

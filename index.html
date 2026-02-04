@@ -132,7 +132,7 @@
           min-height: 100vh;    /* garante preencher tela */
           width: 100%;
           z-index: 1000;
-          display: block;       /* evita “flex geral” quebrar layout */
+          display: block;       /* evita "flex geral" quebrar layout */
 }
 
         .content #leftcolumn #close {
@@ -536,12 +536,12 @@
     <h1 class="portfolio-title">portfolio</h1>
 
     <button class="back-btn js-back back-btn--icon" type="button" aria-label="Voltar">
-      <span class="back-icon" aria-hidden="true">←</span>
+      <span class="back-icon" aria-hidden="true">&larr;</span>
     </button>
   </div>
 
   <p id="desc">
-    Segue aqui alguns projetos que fiz em minha vida profissional. Ultima atualização 04.02.2026. Portfólio ainda sendo alimentado
+    Segue aqui alguns projetos que fiz em minha vida profissional. Última atualização 04.02.2026. Portfólio ainda sendo alimentado
   </p>
 
   <h2>Cases</h2>
@@ -556,7 +556,7 @@
 
     <!-- Unidentis -->
     <button class="case-thumb js-case" type="button" data-case="unidentis">
-      <img src="\images\unidentis/thumb.png" alt="Unidentis">
+      <img src="/images/unidentis/thumb.png" alt="Unidentis">
       <span class="case-thumb-title">Unidentis</span>
       <span class="case-thumb-sub">Healthtech • Performance</span>
     </button>
@@ -580,13 +580,13 @@
 
     <p>Ao longo da minha trajetória, atuei em contextos de e-commerce, saúde digital, marketing de produto e eventos, lidando com desafios reais de conversão, retenção e posicionamento de marca. Já conduzi reestruturações de presença digital e otimização de jornadas com foco em reduzir fricção e aumentar resultados.</p>
 
-    <p>Meu background em <strong>Engenharia de Software</strong> influencia profundamente minha forma de pensar design: eu não crio apenas interfaces bonitas, mas soluções viáveis, consistentes e sustentáveis, pensadas para funcionar no mundo real — com restrições técnicas, alinhamento com stakeholders e rapidez de entrega.</p>
+    <p>Meu background em <strong>Engenharia de Software</strong> influencia profundamente minha forma de pensar design: eu não crio apenas interfaces bonitas, mas soluções viáveis, consistentes e sustentáveis, pensadas para funcionar no mundo real - com restrições técnicas, alinhamento com stakeholders e rapidez de entrega.</p>
 
     <p>Em UX, trabalho com <strong>arquitetura de informação, hierarquia visual e clareza cognitiva</strong>. Em UI, transformo essa lógica em interfaces elegantes, legíveis e coerentes, mantendo consistência visual e identidade ao longo de toda a experiência.</p>
 
     <p>Também atuo com visão 360º: do produto digital ao conteúdo e motion, garantindo unidade visual e uma experiência contínua entre canais e pontos de contato.</p>
 
-    <p>Hoje, atuo como um designer que pensa como produto, executa com profundidade e decide com orientação a impacto — colaborando com times multidisciplinares e lideranças que buscam mais do que estética: buscam clareza, confiança e resultado.</p>
+    <p>Hoje, atuo como um designer que pensa como produto, executa com profundidade e decide com orientação a impacto - colaborando com times multidisciplinares e lideranças que buscam mais do que estética: buscam clareza, confiança e resultado.</p>
   </div>
 </div>
 
@@ -600,7 +600,7 @@
       </div>
 </div>
 <div class="about-back-wrap">
-  <button class="back-btn js-back" aria-label="Voltar">←</button>
+  <button class="back-btn js-back" aria-label="Voltar">&larr;</button>
 </div>
 </div>
 </div>
@@ -613,7 +613,7 @@
       <h1 style="margin:0;">contato</h1>
 
       <button class="back-btn js-back back-btn--icon" type="button" aria-label="Voltar">
-        <span class="back-icon" aria-hidden="true">←</span>
+        <span class="back-icon" aria-hidden="true">&larr;</span>
       </button>
     </div>
 
@@ -739,10 +739,10 @@ function off() {
 <!-- CASE MODAL (abre cases do portfolio) -->
 <div id="caseOverlay" class="case-overlay" aria-hidden="true">
   <div class="case-shell" role="dialog" aria-modal="true" aria-label="Detalhes do projeto">
-    <button class="case-close" type="button" aria-label="Fechar">✕</button>
+    <button class="case-close" type="button" aria-label="Fechar">&#10005;</button>
 
     <!-- viewport com scroll interno -->
-    <div class="case-viewport">
+    <div class="case-viewport case-scroll">
       <div id="caseContent" class="case-content">
         <!-- conteúdo entra via JS -->
       </div>

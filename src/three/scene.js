@@ -17,13 +17,13 @@ function hideLoader() {
 
   loadingScreen.classList.add('fade-out');
   setTimeout(() => {
-    // remove só se ainda existir
+    // remove s� se ainda existir
     loadingScreen?.remove?.();
   }, 600);
 }
 
 // ===============================
-// Variáveis globais (drag threshold)
+// Vari�veis globais (drag threshold)
 // ===============================
 let pointerDownPos = { x: 0, y: 0 };
 let didDrag = false;
@@ -56,7 +56,7 @@ renderer.domElement.id = 'render';
 document.body.appendChild(renderer.domElement);
 
 // ===============================
-// Animação digitando
+// Anima��o digitando
 // ===============================
 const microcopy = document.getElementById("microcopy");
 
@@ -120,12 +120,12 @@ function addIcon(char, x, y, z, rot = {}) {
 
 function createIcons() {
   // Mesmas posições/rotações do seu código original
-  addIcon('',  1.8,  5.0,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
-  addIcon('',   2.0, -5.5,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
-  addIcon('',  -5.0, -2.8,  2.0, { y: -Math.PI / 2, z:  Math.PI / 2 });
-  addIcon('',   5.5, -2.8,  2.0, { y: -Math.PI / 2, z:  Math.PI / 2 });
-  addIcon('',  -2.5, -2.4,  5.0);
-  addIcon('',  -2.8, -2.2, -5.5);
+  addIcon('\uf1fc',  1.8,  5.0,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
+  addIcon('\uf06e',   2.0, -5.5,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
+  addIcon('\uf0c6',  -5.0, -2.8,  2.0, { y: -Math.PI / 2, z:  Math.PI / 2 });
+  addIcon('\uf095',   5.5, -2.8,  2.0, { y: -Math.PI / 2, z:  Math.PI / 2 });
+  addIcon('\uf007',  -2.5, -2.4,  5.0);
+  addIcon('\uf57d',  -2.8, -2.2, -5.5);
 }
 
 // carrega a fonte UMA vez e cria tudo
@@ -138,7 +138,7 @@ fontLoader.load(
   undefined,
   (err) => {
     console.error('Erro ao carregar font_icon.json', err);
-    // não deixa travar loader em produção
+    // n�o deixa travar loader em produ��o
     hideLoader();
   }
 );
@@ -157,9 +157,8 @@ var material = new THREE.ShaderMaterial({
     varying vec3 vNormal;
     void main() {
         vPosition = position.xyz;
-        vec4 vPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_Position =  projectionMatrix * vPosition;
-        vPosition = gl_Position;
+        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_Position = projectionMatrix * mvPosition;
         vNormal = normal;
     }`,
   fragmentShader: `
@@ -274,7 +273,7 @@ function toggleDarkMode() {
 })();
 
 // ===============================
-// Botões de voltar (HTML UI)
+// Bot�es de voltar (HTML UI)
 // ===============================
 document.querySelectorAll('.js-back').forEach((btn) => {
   btn.addEventListener('click', (e) => {
@@ -286,13 +285,7 @@ document.querySelectorAll('.js-back').forEach((btn) => {
 
 function onClick(event) {
   if (pageMode) return;
-  var size;
-  if (window.innerWidth <= 1280) {
-    size = 0
-  }
-  else {
-    size = 0
-  }
+  const size = Math.min(window.innerWidth, window.innerHeight);
   raycaster.setFromCamera(mouse, camera);
   intersects = raycaster.intersectObject(cube);
 
@@ -302,7 +295,8 @@ function onClick(event) {
       if (!pageMode) {
         footer.style.opacity = 1.;
       }
-      window.open("/misc/curriculum.pdf", '_blank').focus();
+      const win = window.open("/misc/curriculum.pdf", '_blank');
+      win?.focus();
       return;
     }
     if (o == 10 || o == 11) {

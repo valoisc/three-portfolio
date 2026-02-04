@@ -1,6 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
+  --accent-blue: #16889A;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -45,7 +46,7 @@ a:hover {
 body{
   margin: 0;
   min-width: 320px;
-  padding-bottom: 72px; /* espaço pro footer fixo */
+  padding-bottom: 72px; /* espa�o pro footer fixo */
   min-height: 100vh;
   display: block;          /* importante */
   background: white;
@@ -112,7 +113,7 @@ button:focus-visible {
   font-weight: 500;
   line-height: 1;
 
-  color: var(--accent-blue); /* 🔵 azul padrão do site */
+  color: var(--accent-blue); /* ?? azul padr�o do site */
   
   display: flex;
   align-items: center;
@@ -126,7 +127,7 @@ button:focus-visible {
 }
 
 .back-btn:active{
-  transform: translateY(0px) scale(0.98);  /* sensação de clique */
+  transform: translateY(0px) scale(0.98);  /* sensa��o de clique */
   box-shadow: none;
 }
 
@@ -140,7 +141,7 @@ button:focus-visible {
   line-height: 1;
 }
 
-/* versão só ícone */
+/* vers�o s� �cone */
 .back-btn--icon{
   padding: 10px 12px;
   border-radius: 999px;
@@ -191,7 +192,7 @@ button:focus-visible {
   color: rgba(234, 246, 248, 0.5) !important;
 }
 
-/* botão voltar no dark */
+/* bot�o voltar no dark */
 .theme-dark .back-btn{
   background: transparent;
   border-color: rgba(234, 246, 248, 0.35);
@@ -244,17 +245,17 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   color: inherit !important;
 }
 
-/* ===== UI Overlay (título + microcopy + label) ===== */
+/* ===== UI Overlay (t�tulo + microcopy + label) ===== */
 #title, #microcopy, #info{
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2500;           /* acima do canvas (render = 1999) */
-  pointer-events: none;    /* não atrapalha o clique/drag no cubo */
+  pointer-events: none;    /* n�o atrapalha o clique/drag no cubo */
   font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
-/* Título */
+/* T�tulo */
 #title{
   top: 48px;
   width: auto;
@@ -265,7 +266,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   color: #16889A;
 }
 
-/* Microcopy animada: entre título e cubo */
+/* Microcopy animada: entre t�tulo e cubo */
 #microcopy{
   top: calc(48px + clamp(52px, 6vw, 110px) + 24px); /* abaixo do valois */
   font-size: clamp(14px, 1.4vw, 18px);
@@ -275,17 +276,17 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   transition: opacity .45s ease;
   text-align: center;
   white-space: nowrap;
-  z-index: 2600; /* acima do title só por garantia */
+  z-index: 2600; /* acima do title s� por garantia */
 }
 
-/* Quando uma página está aberta, não deixa a microcopy sobrepor conteúdo */
+/* Quando uma p�gina est� aberta, n�o deixa a microcopy sobrepor conte�do */
 .page-open #microcopy{
   opacity: 0 !important;
   transform: translateX(-50%) translateY(-6px);
   pointer-events: none;
 }
 
-/* Se você quiser garantir 100% (nem ocupa nada / nem pisca) */
+/* Se voc� quiser garantir 100% (nem ocupa nada / nem pisca) */
 .page-open #microcopy{
   display: none !important;
 }
@@ -308,7 +309,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 
 /* Label da face: abaixo do cubo */
 #info{
-  top: 70vh; /* ajusta a “altura do label” abaixo do cubo */
+  top: 70vh; /* ajusta a "altura do label" abaixo do cubo */
   width: 100%;
   text-align: center;
   font-size: clamp(18px, 2.2vw, 34px);
@@ -316,7 +317,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   color: rgba(230, 240, 242, 0.35); /* discreto */
 }
 
-/* Se quiser no light também ficar bonito */
+/* Se quiser no light tamb�m ficar bonito */
 body:not(.theme-dark) #microcopy{
   color: rgba(22, 136, 154, 0.55);
 }
@@ -333,7 +334,7 @@ body:not(.theme-dark) #info{
   justify-content: center;
   padding: 24px;
   z-index: 999999;              /* acima de tudo */
-  background: rgba(0,0,0,.18);  /* leve, só pra dar profundidade */
+  background: rgba(0,0,0,.18);  /* leve, s� pra dar profundidade */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -347,7 +348,7 @@ body:not(.theme-dark) #info{
   overflow: hidden;
   position: relative;
 
-  /* “vidro” */
+  /* "vidro" */
   background: rgba(255,255,255,.78);
   border: 1px solid rgba(255,255,255,.35);
   box-shadow: 0 30px 90px rgba(0,0,0,.25);
@@ -370,7 +371,7 @@ body:not(.theme-dark) #info{
   -webkit-overflow-scrolling: touch;
 }
 
-/* botão fechar */
+/* bot�o fechar */
 .case-close{
   position: absolute;
   top: 14px;
@@ -391,7 +392,7 @@ body:not(.theme-dark) #info{
   background: rgba(255,255,255,.95);
 }
 
-/* conteúdo interno */
+/* conte�do interno */
 .case-content{
   font-family: 'M PLUS Rounded 1c', sans-serif;
   color: #0b1a1c;
@@ -452,7 +453,7 @@ body:not(.theme-dark) #info{
   .case-viewport{ padding: 18px; }
 }
 
-/* ===== Tema dark (se você usa .theme-dark no body/html) ===== */
+/* ===== Tema dark (se voc� usa .theme-dark no body/html) ===== */
 .theme-dark .case-shell{
   background: rgba(10,16,18,.72);
   border: 1px solid rgba(255,255,255,.10);
@@ -467,7 +468,7 @@ body:not(.theme-dark) #info{
 
 /* ===== Scrollbar do Case Modal ===== */
 .case-scroll{
-  scrollbar-gutter: stable; /* evita layout “pular” quando aparece */
+  scrollbar-gutter: stable; /* evita layout "pular" quando aparece */
 }
 
 /* Firefox */
@@ -482,7 +483,7 @@ body:not(.theme-dark) #info{
 }
 
 .case-scroll::-webkit-scrollbar-track{
-  background: transparent;     /* trilha invisível */
+  background: transparent;     /* trilha invis�vel */
 }
 
 .case-scroll::-webkit-scrollbar-thumb{
@@ -491,12 +492,12 @@ body:not(.theme-dark) #info{
   border-radius: 999px;
 }
 
-/* hover: um pouquinho mais “presente” (opcional) */
+/* hover: um pouquinho mais "presente" (opcional) */
 .case-scroll::-webkit-scrollbar-thumb:hover{
   background: rgba(22, 136, 154, 0.12);
 }
 
-/* opcional: remove os botões antigos (quando aparecem) */
+/* opcional: remove os bot�es antigos (quando aparecem) */
 .case-scroll::-webkit-scrollbar-button{
   display: none;
 }
@@ -526,8 +527,8 @@ body:not(.theme-dark) #info{
   padding: 32px 6vw 96px;
   padding-top: 0 !important;
 
-  background: rgba(255,255,255,.92);   /* ✅ light */
-  backdrop-filter: none;               /* ✅ sem blur constante no fundo */
+  background: rgba(255,255,255,.92);   /* ? light */
+  backdrop-filter: none;               /* ? sem blur constante no fundo */
   -webkit-backdrop-filter: none;
   z-index: 3000;
 }
@@ -538,13 +539,13 @@ body:not(.theme-dark) #info{
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
-/* garante que o conteúdo não limite em 60% nem cause “faixa branca” */
+/* garante que o conte�do n�o limite em 60% nem cause "faixa branca" */
 #portfolio #text-content{
   width: min(1100px, 92vw) !important;
   margin: 0 auto !important;
 }
 
-/* evita o body criar scroll “duplicado”/faixa branca */
+/* evita o body criar scroll "duplicado"/faixa branca */
 body{
   overflow: hidden;
 }
@@ -615,10 +616,10 @@ body{
   justify-content: space-between;
   gap: 16px;
 
-  /* mantém o espaçamento interno */
+  /* mant�m o espa�amento interno */
   padding: 14px 6vw;
 
-  /* 🔥 truque: anula o padding lateral do #portfolio */
+  /* ?? truque: anula o padding lateral do #portfolio */
   margin-left: -6vw;
   margin-right: -6vw;
 
@@ -647,12 +648,12 @@ body{
 }
 
 .case-modal{
-  scrollbar-gutter: stable both-edges; /* reserva espaço do scroll */
+  scrollbar-gutter: stable both-edges; /* reserva espa�o do scroll */
 }
 
 .case-modal__dialog{
   position: relative;
-  overflow: hidden;       /* mantém cantos perfeitos */
+  overflow: hidden;       /* mant�m cantos perfeitos */
   border-radius: 22px;
 }
 
@@ -672,7 +673,7 @@ body{
   max-height: min(78vh, 820px);
   overflow: auto;
   padding: 16px 18px 18px;
-  padding-right: 14px; /* “respiro” pra scrollbar não comer nada */
+  padding-right: 14px; /* "respiro" pra scrollbar n�o comer nada */
 }
 
 .case-modal__body{
@@ -689,7 +690,7 @@ body{
 }
 .case-modal__body::-webkit-scrollbar-thumb{
   background: transparent;                  /* sem preenchimento */
-  border: 2px solid rgba(22,136,154,0.9);   /* só contorno */
+  border: 2px solid rgba(22,136,154,0.9);   /* s� contorno */
   border-radius: 999px;
 }
 .case-modal__body::-webkit-scrollbar-thumb:hover{
@@ -697,7 +698,7 @@ body{
 }
 
 
-/* Container do botão voltar na coluna do perfil (Sobre) */
+/* Container do bot�o voltar na coluna do perfil (Sobre) */
 .about-back-wrap{
   display:flex;
   justify-content:center;
@@ -748,7 +749,7 @@ body{
   color: var(--accent-blue, #0AA6C6);
 }
 
-/* vídeos se comportarem como imagens no grid */
+/* v�deos se comportarem como imagens no grid */
 .case-grid img,
 .case-grid video{
   width: 100%;
@@ -756,15 +757,15 @@ body{
   border-radius: 14px;
 }
 
-/* evita vídeo “esticado” e mantém estética */
+/* evita v�deo "esticado" e mant�m est�tica */
 .case-grid video{
   width: 100%;
-  height: auto;          /* 🔥 deixa o browser respeitar a proporção */
+  height: auto;          /* ?? deixa o browser respeitar a propor��o */
   display: block;
   border-radius: 14px;
 
   background: #000;
-  object-fit: contain;   /* 🔥 nunca corta */
+  object-fit: contain;   /* ?? nunca corta */
 }
 
 .desc {
