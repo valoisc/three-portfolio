@@ -1,83 +1,10 @@
-import './style.css';
-// import './three/scene.js'; // ✅ cubo removido
+
+import './three/scene.js';
 import './favicon.js';
+import './style.css';
 
-// ==========================
-// Navegação sem cubo (HOME -> SEÇÕES)
-// ==========================
-const SECTIONS = ['portfolio', 'sobre', 'contato'];
-
-function $(sel) {
-  return document.querySelector(sel);
-}
-function $all(sel) {
-  return Array.from(document.querySelectorAll(sel));
-}
-
-function hideLoading() {
-  const loading = document.getElementById('loading-screen');
-  if (loading) loading.classList.add('fade-out');
-}
-
-function showHome() {
-  // esconde seções
-  SECTIONS.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-
-  // mostra navegação central (se existir no index)
-  const nav = document.querySelector('.center-nav');
-  if (nav) nav.style.display = 'flex';
-
-  // volta o texto do label (se existir)
-  const hinfo = document.getElementById('hinfo');
-  if (hinfo) hinfo.textContent = 'PORTFOLIO • SOBRE • CONTATO';
-}
-
-function showSection(id) {
-  SECTIONS.forEach((sec) => {
-    const el = document.getElementById(sec);
-    if (!el) return;
-    el.style.display = sec === id ? 'block' : 'none';
-  });
-
-  // some com navegação central
-  const nav = document.querySelector('.center-nav');
-  if (nav) nav.style.display = 'none';
-
-  // ajusta label
-  const hinfo = document.getElementById('hinfo');
-  if (hinfo) {
-    const map = { portfolio: 'PORTFOLIO', sobre: 'SOBRE', contato: 'CONTATO' };
-    hinfo.textContent = map[id] ?? '';
-  }
-
-  hideLoading();
-}
-
-function wireNavigation() {
-  // ✅ Botões centrais novos (do index reescrito)
-  $all('.nav-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-target');
-      if (target) showSection(target);
-    });
-  });
-
-  // ✅ Botões "voltar" que você já tem no HTML
-  $all('.js-back').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      showHome();
-    });
-  });
-}
-
-// ==========================
-// Case Modal (Portfolio)
-// ==========================
-function wireCaseModal() {
+// ===== Case Modal (Portfolio) =====
+window.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('caseOverlay');
   const shell = overlay?.querySelector('.case-shell');
   const content = document.getElementById('caseContent');
@@ -88,6 +15,7 @@ function wireCaseModal() {
     return;
   }
 
+  // Conteúdos
   const CASES = {
     lastampa: {
       title: 'La Stampa Run',
@@ -112,49 +40,57 @@ function wireCaseModal() {
           p: 'O evento ganhou identidade própria e uma experiência consistente entre digital e físico. A clareza na jornada e a integração entre marca, conteúdo e materiais contribuíram para maior percepção de valor e um processo de inscrição mais direto para o usuário.',
         },
       ],
+
+      // ✅ imagens + vídeos inline no mesmo grid
       media: [
         { type: 'image', src: '/images/laestamparun/evento.heic', alt: 'Evento - Foto retirada por mim' },
         { type: 'image', src: '/images/laestamparun/1.png', alt: 'Material em que fiz o Design' },
         { type: 'image', src: '/images/laestamparun/trofeu.jpg', alt: 'Troféu que fiz para o evento' },
-        { type: 'video', src: '/images/laestamparun/video1.mp4' },
-        { type: 'video', src: '/images/laestamparun/video2.mp4' },
-        { type: 'video', src: '/images/laestamparun/video3.mp4' },
+
+        { type: 'video', src: '/images/laestamparun/video1.mp4', },
+        { type: 'video', src: '/images/laestamparun/video2.mp4', },
+        { type: 'video', src: '/images/laestamparun/video3.mp4', },
       ],
     },
-
     unidentis: {
-      title: 'Unidentis',
-      meta: ['CRO', 'Healthtech', 'Compliance'],
-      intro:
-        'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível à confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas à conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
-      sections: [
-        {
-          h2: 'Contexto',
-          p: 'A Unidentis atua no segmento de planos odontológicos, um contexto onde o excesso de informação, linguagem técnica e exigências regulatórias frequentemente geram fricção e dificultam a tomada de decisão do usuário.',
-        },
-        {
-          h2: 'O desafio',
-          p: 'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar à conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.',
-        },
-        {
-          h2: 'Minha atuação',
-          p: 'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas à performance e escalabilidade. Estruturando o setor de marketing da Unidentis ',
-        },
-        {
-          h2: 'Resultado',
-          p: 'Os materiais fortaleceram a presença digital da marca e contribuíram para campanhas mais claras e eficientes, alinhando impacto visual, consistência de marca e foco em conversão. No primeiro ano, o digital faturou mais do que as concessionária de planos!',
-        },
-      ],
+  title: 'Unidentis',
+  meta: [ 'CRO', 'Healthtech', 'Compliance'],
+  intro:
+    'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível à confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas à conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
+  sections: [
+    {
+      h2: 'Contexto',
+      p:
+        'A Unidentis atua no segmento de planos odontológicos, um contexto onde o excesso de informação, linguagem técnica e exigências regulatórias frequentemente geram fricção e dificultam a tomada de decisão do usuário.'
+    },
+    {
+      h2: 'O desafio',
+      p:
+        'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar à conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.'
+    },
+    {
+      h2: 'Minha atuação',
+      p:
+        'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas à performance e escalabilidade. Estruturando o setor de marketing da Unidentis '
+    },
+    {
+      h2: 'Resultado',
+      p:
+        'Os materiais fortaleceram a presença digital da marca e contribuíram para campanhas mais claras e eficientes, alinhando impacto visual, consistência de marca e foco em conversão. No primeiro ano, o digital faturou mais do que as concessionária de planos!'
+    }
+  ],
+
+      // ✅ imagens + vídeos inline no mesmo grid
       media: [
-        { type: 'image', src: '/images/unidentis/1.png', alt: 'Cartão de credenciado' },
+        { type: 'image', src: '/images/unidentis/1.png', alt: 'Cartão de credenciado ' },
         { type: 'image', src: '/images/unidentis/2.jpg', alt: 'Material em que fiz o Design' },
         { type: 'image', src: '/images/unidentis/3.jpg', alt: 'Nosso Influenciador' },
         { type: 'image', src: '/images/unidentis/4.jpg', alt: 'Gerente Comercial' },
         { type: 'image', src: '/images/unidentis/5.jpg', alt: 'Cartão impresso' },
-        { type: 'video', src: '/images/unidentis/1.mp4' },
+
+        { type: 'video', src: '/images/unidentis/1.mp4', },
       ],
     },
-
     meltz: {
       title: 'Meltz Burger',
       meta: ['Branding', 'Marketing', 'Performance', 'Food Service'],
@@ -178,6 +114,8 @@ function wireCaseModal() {
           p: 'No primeiro mês de trabalho de rebranding, a marca conseguiu em seu canal próprio de vendas alcançar seu primeiro faturamento recorde, não somente como experienciou um resultado positivo de LTV aumentando o retorno de clientes em até 80%',
         },
       ],
+
+      // ✅ imagens + vídeos inline no mesmo grid
       media: [
         { type: 'image', src: '/images/meltz/1.png', alt: 'Logotipo' },
         { type: 'image', src: '/images/meltz/2.png', alt: 'Logotipo' },
@@ -190,7 +128,10 @@ function wireCaseModal() {
     },
   };
 
-  // PORTFOLIO SCROLL STATE (mantido)
+  /* =========================
+     PORTFOLIO SCROLL STATE
+     (ativa blur do header só quando rolar)
+     ========================= */
   const portfolio = document.getElementById('portfolio');
   if (portfolio) {
     portfolio.addEventListener(
@@ -225,6 +166,8 @@ function wireCaseModal() {
         )
         .join('') ?? '';
 
+    // ✅ Suporta o novo "media" (imagem + vídeo)
+    // 🔁 E mantém compatível com cases antigos que usam "images"
     const mediaArray = Array.isArray(c.media)
       ? c.media
       : Array.isArray(c.images)
@@ -250,6 +193,8 @@ function wireCaseModal() {
                     ></video>
                   `;
                 }
+
+                // default = image
                 return `<img src="${m.src}" alt="${m.alt ?? ''}" loading="lazy">`;
               })
               .join('')}
@@ -275,11 +220,13 @@ function wireCaseModal() {
 
     renderCase(caseId);
 
+    // trava scroll do fundo
     document.documentElement.style.overflow = 'hidden';
 
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
 
+    // “pulo” leve a partir da thumb (opcional)
     if (thumbEl && shell) {
       const from = thumbEl.getBoundingClientRect();
       const to = shell.getBoundingClientRect();
@@ -303,6 +250,7 @@ function wireCaseModal() {
     if (!isOpen) return;
     isOpen = false;
 
+    // pausa vídeos quando fecha (UX)
     content.querySelectorAll('video').forEach((v) => v.pause());
 
     overlay.classList.remove('is-open');
@@ -310,6 +258,7 @@ function wireCaseModal() {
     document.documentElement.style.overflow = '';
   }
 
+  // ✅ UX: ao dar play em um vídeo, pausa os outros
   content.addEventListener(
     'play',
     (e) => {
@@ -323,6 +272,7 @@ function wireCaseModal() {
     true
   );
 
+  // abre ao clicar na thumb
   document.querySelectorAll('.js-case').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -331,43 +281,20 @@ function wireCaseModal() {
     });
   });
 
+  // fechar: botão X
   closeBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     closeCase();
   });
 
+  // fechar: clicar fora
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeCase();
   });
 
+  // fechar: ESC
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCase();
   });
-}
-
-// ==========================
-// BOOT
-// ==========================
-window.addEventListener('DOMContentLoaded', () => {
-  wireNavigation();
-  wireCaseModal();
-
-  // estado inicial: HOME
-  showHome();
-
-  // se o usuário acessar com hash (#portfolio etc), abre direto
-  const hash = (location.hash || '').replace('#', '');
-  if (SECTIONS.includes(hash)) {
-    showSection(hash);
-  }
-
-  // loader some (home já pode aparecer sem esperar nada)
-  hideLoading();
-});
-
-// ✅ opcional: permitir abrir via hash manualmente (ex: /#portfolio)
-window.addEventListener('hashchange', () => {
-  const hash = (location.hash || '').replace('#', '');
-  if (SECTIONS.includes(hash)) showSection(hash);
 });
