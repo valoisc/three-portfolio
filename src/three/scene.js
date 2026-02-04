@@ -393,8 +393,11 @@ function onPointerMove(e) {
 function onPointerUp(e) {
   if (didDrag) return;
 
-  if (e.target.closest('#sobre, #portfolio, #contato, #overlay, [name="close-content"], #close-content')) {
-    return;
+  const target = e.target;
+  if (target && typeof target.closest === 'function') {
+    if (target.closest('#sobre, #portfolio, #contato, #overlay, [name="close-content"], #close-content')) {
+      return;
+    }
   }
 
   onClick(e);
