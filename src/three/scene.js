@@ -148,9 +148,10 @@ fontLoader.load(
 // ===============================
 var material = new THREE.ShaderMaterial({
   uniforms: {
-    u_time: { type: "f", value: 1.0 },
+    u_time: { value: 1.0 },
     u_resolution: { value: new THREE.Vector2(width, height) },
   },
+
   vertexShader: `
     varying vec3 vNormal;
 
@@ -159,6 +160,7 @@ var material = new THREE.ShaderMaterial({
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
+
   fragmentShader: `
     uniform vec2 u_resolution;
     uniform float u_time;
@@ -169,21 +171,16 @@ var material = new THREE.ShaderMaterial({
     }
 
     vec3 spectrum(float n) {
-      return pal(n, vec3(0.5,0.5,0.5), vec3(0.5,0.5,0.5), vec3(1.0,1.0,1.0), vec3(0.0,0.33,0.67));
+      return pal(n, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0,0.33,0.67));
     }
 
     void main() {
-      gl_FragColor = vec4(spectrum(abs(vNormal.x/.659 + vNormal.y/.66 + vNormal.z/.6606)), 1.0);
+      gl_FragColor = vec4(
+        spectrum(abs(vNormal.x/.659 + vNormal.y/.66 + vNormal.z/.6606)),
+        1.0
+      );
     }
-  `
-});
-    
-    vec3 spectrum(float n) {
-        return pal(n, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.,1.0,1.0),vec3(.0,0.33,0.67) );
-    }
-    void main() {
-        gl_FragColor = vec4(spectrum(abs(vNormal.x/.659+vNormal.y/.66+vNormal.z/.6606)), 1.);
-    }`
+  `,
 });
 
 var geometry = new THREE.BoxGeometry(10, 10, 10);
