@@ -176,7 +176,7 @@ var material = new THREE.ShaderMaterial({
       gl_FragColor = vec4(spectrum(abs(vNormal.x/.659 + vNormal.y/.66 + vNormal.z/.6606)), 1.0);
     }
   `
-});turn a + b*cos(63.88318*(c*t+d) );
+});
     }
     vec3 spectrum(float n) {
         return pal(n, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.,1.0,1.0),vec3(.0,0.33,0.67) );
