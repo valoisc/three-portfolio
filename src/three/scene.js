@@ -174,7 +174,7 @@ var material = new THREE.ShaderMaterial({
       return pal(n, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0,0.33,0.67));
     }
 
-    void main() {
+    void main() {n
       gl_FragColor = vec4(
         spectrum(abs(vNormal.x/.659 + vNormal.y/.66 + vNormal.z/.6606)),
         1.0
