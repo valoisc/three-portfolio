@@ -1,7 +1,48 @@
 
-import './three/scene.js';
 import './favicon.js';
 import './style.css';
+
+window.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('mainNav');
+  const sections = ['portfolio', 'sobre', 'contato'];
+
+  function hideAllSections() {
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+
+  function showSection(id) {
+    hideAllSections();
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = 'block';
+    }
+    nav?.classList.add('is-hidden');
+  }
+
+  function goHome() {
+    hideAllSections();
+    nav?.classList.remove('is-hidden');
+  }
+
+  document.querySelectorAll('.js-nav').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = btn.dataset.target;
+      if (target) showSection(target);
+    });
+  });
+
+  document.querySelectorAll('.js-back').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goHome();
+    });
+  });
+});
 
 // ===== Case Modal (Portfolio) =====
 window.addEventListener('DOMContentLoaded', () => {

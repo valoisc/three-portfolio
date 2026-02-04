@@ -52,6 +52,50 @@ body{
   background: white;
 }
 
+.nav-buttons{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 24px;
+  z-index: 3000;
+}
+
+.nav-buttons.is-hidden{
+  display: none;
+}
+
+.nav-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  border: 2px solid var(--accent-blue);
+  background: var(--accent-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+
+.nav-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(22, 136, 154, 0.25);
+}
+
+.nav-btn:focus-visible{
+  outline: 3px solid rgba(22, 136, 154, 0.35);
+  outline-offset: 2px;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -546,10 +590,6 @@ body:not(.theme-dark) #info{
 }
 
 /* evita o body criar scroll "duplicado"/faixa branca */
-body{
-  overflow: hidden;
-}
-
 /* ===== GRID DOS CASES ===== */
 .cases-grid{
   display: grid;

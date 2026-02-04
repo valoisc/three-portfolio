@@ -457,78 +457,17 @@
             right: 6%;
           }
         }
-        #loading-screen {
-          position: absolute;
-          z-index: 2;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-          opacity: 1;
-          transition: 1s opacity;
-        }
-
-        #loading-screen.fade-out {
-            opacity: 0;
-            display: none;
-        }
-
-        #loader {
-            display: block;
-            position: relative;
-            left: 50%;
-            top: 50%;
-            width: 150px;
-            height: 150px;
-            margin: -75px 0 0 -75px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: #16889A;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-        }
-
-        @-webkit-keyframes spin {
-            0%   {
-                -webkit-transform: rotate(0deg);
-                -ms-transform: rotate(0deg);
-                transform: rotate(0deg);
-            }
-            100% {
-                -webkit-transform: rotate(360deg);
-                -ms-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
-        @keyframes spin {
-            0%   {
-                -webkit-transform: rotate(0deg);
-                -ms-transform: rotate(0deg);
-                transform: rotate(0deg);
-            }
-            100% {
-                -webkit-transform: rotate(360deg);
-                -ms-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
     </style>
 
     <body>
-      <section id="loading-screen">
-        <div id="loader"></div>
-      </section>
       <div onclick="off()" id="overlay"><center><img id="imgoverlay" src=""></center></div>
-      <div id="title"><span id="ptitle">valois</span></div>
 
-<!-- microcopy animada -->
-<div id="microcopy" aria-hidden="true">
-  <span id="microText"></span><span class="cursor">|</span>
-</div>
-
-<!-- label da face (antes ficava embaixo do valois) -->
-<div id="info"><span id="hinfo"></span></div>
+      <nav class="nav-buttons" id="mainNav" aria-label="Navegação principal">
+        <button class="nav-btn js-nav" type="button" data-target="portfolio">Portfolio</button>
+        <button class="nav-btn js-nav" type="button" data-target="sobre">Sobre</button>
+        <button class="nav-btn js-nav" type="button" data-target="contato">Contato</button>
+        <a class="nav-btn nav-link" href="/misc/curriculum.pdf" target="_blank" rel="noopener">Curriculum</a>
+      </nav>
 
 
 <div class="content" id="portfolio" style="display:none;">
@@ -670,7 +609,6 @@
   </div>
 </div>
 
-<div class="footer" id="footer"><span style="font-style: italic; font-weight: 400;">Pense fora da caixa.</span> <br> Designed and developed by Valois  </div>
 <script>
 function on(img) {
   document.getElementById("overlay").style.display = "block";
@@ -683,59 +621,6 @@ function off() {
 </script>
     <script type="module" src="./src/main.js"></script>
 
-<script>      
-(() => {
-  const elWrap = document.getElementById("microcopy");
-  const elText = document.getElementById("microText");
-
-  if (!elWrap || !elText) return;
-
-  const lines = [
-    "Gire o cubo para explorar",
-    "Clique no cubo para navegar"
-  ];
-
-  const wait = (ms) => new Promise(r => setTimeout(r, ms));
-
-  async function typeText(text, speed = 60){
-    for (let i = 0; i <= text.length; i++){
-      elText.textContent = text.slice(0, i);
-      await wait(speed);
-    }
-  }
-
-  async function deleteText(speed = 45){
-    const text = elText.textContent;
-    for (let i = text.length; i >= 0; i--){
-      elText.textContent = text.slice(0, i);
-      await wait(speed);
-    }
-  }
-
-  async function loop(){
-    // pequena espera inicial
-    await wait(600);
-
-    while(true){
-      for (const line of lines){
-        elWrap.style.opacity = "1";          // fade in
-        await wait(620);
-
-        await typeText(line);
-        await wait(1600);
-
-        await deleteText();
-        await wait(750);
-
-        elWrap.style.opacity = "0";          // fade out
-        await wait(900);
-      }
-    }
-  }
-
-  loop();
-})();
-</script>
 <!-- CASE MODAL (abre cases do portfolio) -->
 <div id="caseOverlay" class="case-overlay" aria-hidden="true">
   <div class="case-shell" role="dialog" aria-modal="true" aria-label="Detalhes do projeto">
