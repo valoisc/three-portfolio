@@ -770,3 +770,28 @@ body{
 .desc {
   font-size: 40px;
 }
+
+.center-ui{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 12px;
+  z-index: 9999;
+}
+
+.ui-btn{
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.5);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.ui-btn:hover{
+  background: rgba(0,0,0,.7);
+}
