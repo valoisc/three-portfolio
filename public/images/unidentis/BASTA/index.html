@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+        <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet">
+        <title>Valois Design</title>
+        <link rel="icon" id="dynamic-favicon">
+        <link rel="manifest" href="/images/favicon/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <script type="importmap">
+    {
+      "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+        
+        <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    </head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@200&display=swap');
+        html {
+          font-size: 100%;
+        }
+        body {
+          margin: 0;
+          background-color: #fff;
+          
+        }
+        h1 {
+          color: #16889A !important;
+        }
+        .social {
+          margin-left: 0px;
+          width: 100%;
+          text-align: center;
+        }
+        .social a{
+          color: #16889A;
+        }
+        .social i{
+          padding: 50px;
+        }
+        #render {
+          position: fixed;
+          z-index: 1999;
+          right: 0px;
+          bottom: 0px;
+          cursor: grab;
+        }
+        .content #leftcontent #textinfo {
+          text-align: center;
+        }
+        #title {
+          font-family: 'M PLUS Rounded 1c', sans-serif;
+          position: absolute;
+          width: 100%;
+          top: 50px;
+          font-weight: 700;
+          text-align: center;
+          font-size: 200px;
+          z-index: 100;
+          display:block;
+          color: #16889A;
+          letter-spacing: 20px; 
+        }
+        #info {
+          font-family: 'M PLUS Rounded 1c', sans-serif;
+          position: absolute;
+          top: 270px;
+          color: #16889A;
+          width: 100%;
+          letter-spacing: 50px; 
+          text-align: center;
+          font-size: 150px;
+          z-index: 100;
+          display:block;
+        }
+        #text-content {
+            margin: 0 auto;
+            width: 60%; 
+        }
+        #text-content h2{
+          color: #16889A;
+        }
+        #text-content h1{
+          font-size: 5em;
+        }
+        #text-content #close {
+          color: #16889A;
+        }
+        #text-content #close-content {
+          background-color: #fff;
+          border: 2px solid #16889A;
+          color: #16889A;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          /*margin: 4px 2px;*/
+          cursor: pointer;
+          border-radius: 20px;
+        }
+        #hinfo {
+          transition: top 2s;
+        }
+        #close {
+          margin: 0 auto;
+          font-weight: 200;
+          cursor: pointer;
+          font-size: 1.3em;
+          font-weight: 700;
+
+        }
+        #close-content {
+          /*border-radius: 100px;*/
+          text-decoration: none;
+          text-align: center;
+        }
+      .content{
+          position: relative;   /* antes era absolute */
+          height: auto;         /* antes era 100% */
+          min-height: 100vh;    /* garante preencher tela */
+          width: 100%;
+          z-index: 1000;
+          display: block;       /* evita “flex geral” quebrar layout */
+}
+
+        .content #leftcolumn #close {
+          color: #fff;
+        }
+        .content #leftcolumn #close-content {
+          border: 2px solid #fff;
+          margin: 6px 30% 3px 30%;
+          border-radius:20px;
+          text-decoration: none;
+        }
+        .content #leftcolumn {
+          position: fixed;
+          background-color: #16889A;
+          width: 30%;
+          color: #fff;
+          font-weight: 400;
+          height: 100%;
+          float: right;
+        }
+        .content #leftcontent h2{
+          color: #fff;
+          margin-top: 10px;
+          font-weight: 300;
+        }
+        .content #leftcontent img{
+          width: 70%;
+          margin-top: 50%;
+          border-radius: 50%;
+        }
+        .content #leftcontent{
+          position: relative;
+          top: 0%;
+          margin: 0 auto;
+          width: 90%;
+        }
+        .content #rightcolumn {
+          position: relative;
+          width: 70%;
+          float:right;
+          margin: 0px auto;
+          background-color: #fff;
+        }
+        .content #rightcontent{
+          margin: 0 auto;
+          width: 90%;
+        }
+        .content #rightcontent #text{
+          font-size: 1.7em;
+          text-align: justify;
+        }
+        .content #rightcontent h1{
+          margin-top: 2%;
+          font-size: 5em;
+          margin-bottom: 0px;
+        }
+        #sobre {
+          display: none;
+          font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+        #contato {
+          display: none;
+          font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+        #portfolio {
+          display: none;
+          font-family: 'M PLUS Rounded 1c', sans-serif;
+           padding-bottom: 140px;
+        }
+        .row-img {
+          height: 100%;
+          display: flex;
+        }
+        #overlay {
+          position: fixed; /* Sit on top of the page content */
+          display: none; /* Hidden by default */
+          width: 100%; /* Full width (cover the whole page) */
+          height: 100%; /* Full height (cover the whole page) */
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+          z-index: 92000; /* Specify a stack order in case you're using a different order for other elements */
+            cursor: pointer; /* Add a pointer on hover */
+        }
+        #overlay img {
+          position: absolute;
+          width: 50%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          -ms-transform: translate(-50%,-50%);
+        }
+        .row-img,
+        .row-img > .column-img {
+          padding: 5px;
+        }
+        .column-img {
+          width: 33%;
+        }
+        .img-content {
+          position: relative;
+          cursor:pointer;
+          margin: 0 auto;
+          padding: 10px;
+          background-color: #16889A;
+          border-radius: 10px;
+          transition: top 0.5s, box-shadow 0.5s;
+          box-shadow: rgba(17, 12, 46, 0.2) 0px 48px 100px 0px;
+          top: 0;
+        }
+        .img-content:hover{
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+          top: -10px;
+        }
+        .img-content span {
+          display: block;
+          line-height: 130%;
+          font-size: 0.6em;
+          font-weight: 300;
+          color: #fff;
+          word-wrap: break-word;
+        }
+        .img-content p {
+          font-size: 1em;
+          font-weight: 700;
+          margin-top: -0px !important;
+          color: #fff;
+        }
+        .footer {
+          position: fixed;
+          bottom: 30px;
+          font-weight: 300;
+          color:#16889A;
+          letter-spacing: 10px;
+          width: 100%;
+          text-align: center;
+        }
+        #nome {
+          font-weight: 700;
+          font-size: 3em;
+        }
+        #header #close {
+          position: fixed;
+          top: 2%;
+          right:20%;
+          z-index: 99999999;
+        }
+        #header #close-content {
+            background-color: #fff;
+        }
+        #desc {
+            padding-top: 12%;
+        }
+        @media only screen and (max-width: 3100px) {
+          #title {
+            top: 20px;
+          }
+          #info {
+            top: 220px;
+          }
+        }
+        @media only screen and (max-width: 2800px) {
+          #title {
+            top: 10px;
+            font-size: 100px;
+          }
+          #info {
+            top: 120px;
+          }
+          .content {
+            font-size: 1.3em;
+          }
+        }
+        @media only screen and (max-width: 2000px) {
+          #title {
+            top: 10px;
+            font-size: 100px;
+          }
+          #info {
+            top: 120px;
+            font-size: 70px;
+          }
+          #footer {
+            bottom: -40px;
+          }
+          .content {
+            font-size: 0.9em;
+          }
+          .content #leftcontent h2 {
+            margin-top: 5%;
+          }
+        }
+        @media only screen and (max-width: 1280px) {
+          #title {
+            top: 10px;
+            font-size: 100px;
+          }
+          #info {
+            top:150px;
+            font-size: 30px;
+          }
+          .row,
+          .row > .column {
+            padding: 5px;
+          }
+          #footer {
+            font-size: 10px;
+            bottom: -50px;
+          }
+          .content {
+            font-size: 0.7em;
+          }
+          .content #leftcontent img {
+            margin-top: 35%;
+          }
+          .close-content {
+            font-size: 0.7em;
+          }
+          
+        }
+        @media only screen and (max-width: 1024px) {
+          #title {
+            top: 10px;
+            font-size: 50px;
+          }
+          #info {
+            top:80px;
+            font-size: 20px;
+          }
+          .row,
+          .row > .column {
+            padding: 2px;
+          }
+          .content {
+            font-size: 0.5em;
+          }
+          #close {
+            /*width: 80px;*/
+          }
+          #close-content {
+            padding: 5px;
+          }
+        }
+        
+        @media only screen and (max-width: 800px) {
+          .content {
+            font-size: 0.3em;
+          }
+        }
+        @media only screen and (max-width: 540px) {
+          #info {
+            letter-spacing: 15px;
+            font-size: 20px;
+            left: -25px;
+          }
+          .content {
+            font-size: 0.5em;
+          }
+          #text-content {
+            margin: 0 auto;
+            width: 95%; 
+          }
+          #header #close{
+              position: fixed;
+              top: 2%;
+              right:5%;
+          }
+          #desc {
+              margin-top: 10%;
+          }
+          
+          .content #leftcolumn{
+            position: fixed;
+            bottom: 0%;
+            background-color: #16889A;
+            width: 100%;
+            color: #fff;
+            font-weight: 400;
+            height: 20%;
+          }
+          .content #leftcontent #textinfo{
+            position: absolute;
+            margin-top: 3%;
+            text-align: right;
+            right: 0%;
+          }
+          .content #leftcolumn #close {
+              position: absolute;
+              right: -5%;
+              bottom: 2%;
+              width: 30%;
+              
+          }
+          .content #leftcontent img{
+            position: absolute;
+            left: 0%;
+            margin-top: 4%;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+          }
+          .content #leftcontent{
+            position: relative;
+            top: 0%;
+            margin: 0 auto;
+            width: 90%;
+          }
+          .content #rightcolumn {
+            position: relative;
+            width: 100%;
+            float:right;
+            margin: 0px auto;
+            background-color: #fff;
+            padding-bottom: 40% !important;
+          }
+          #close {
+            position: absolute;
+            bottom: 6%;
+            /*width: 20%;*/
+            right: 6%;
+          }
+        }
+        #loading-screen {
+          position: absolute;
+          z-index: 2;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+          opacity: 1;
+          transition: 1s opacity;
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            display: none;
+        }
+
+        #loader {
+            display: block;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #16889A;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0%   {
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes spin {
+            0%   {
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <body>
+      <section id="loading-screen">
+        <div id="loader"></div>
+      </section>
+      <div onclick="off()" id="overlay"><center><img id="imgoverlay" src=""></center></div>
+      <div id="title"><span id="ptitle">valois</span></div>
+
+<!-- microcopy animada -->
+<div id="microcopy" aria-hidden="true">
+  <span id="microText"></span><span class="cursor">|</span>
+</div>
+
+<!-- label da face (antes ficava embaixo do valois) -->
+<div id="info"><span id="hinfo"></span></div>
+
+
+<div class="content" id="portfolio" style="display:none;">
+  <div class="portfolio-header">
+    <h1 class="portfolio-title">portfolio</h1>
+
+    <button class="back-btn js-back back-btn--icon" type="button" aria-label="Voltar">
+      <span class="back-icon" aria-hidden="true">←</span>
+    </button>
+  </div>
+
+  <p id="desc">
+    Segue aqui alguns projetos que fiz em minha vida profissional. Ultima atualização 04.02.2026. Portfólio ainda sendo alimentado
+  </p>
+
+  <h2>Cases</h2>
+
+  <!-- La Estampa Run -->
+  <div class="cases-grid">
+    <button class="case-thumb js-case" type="button" data-case="lastampa">
+      <img src="/images/laestamparun/thumb.jpg" alt="La Stampa Run">
+      <span class="case-thumb-title">La Stampa Run</span>
+      <span class="case-thumb-sub">Branding • Evento • Growth</span>
+    </button>
+
+    <!-- Unidentis -->
+    <button class="case-thumb js-case" type="button" data-case="unidentis">
+      <img src="\images\unidentis/thumb.png" alt="Unidentis">
+      <span class="case-thumb-title">Unidentis</span>
+      <span class="case-thumb-sub">Healthtech • Performance</span>
+    </button>
+
+    <!-- Meltz -->
+    <button class="case-thumb js-case" type="button" data-case="meltz">
+      <img src="/images/meltz/thumb.png" alt="Meltz Burger">
+      <span class="case-thumb-title">Meltz Burger</span>
+      <span class="case-thumb-sub">Branding • FoodService • Growth • Marketing</span>
+    </button>
+    
+  </div>
+</div>  
+<div class="content" id="sobre">
+  
+<div id="rightcolumn">
+  <div id="rightcontent" class="about-text">
+    <h1>sobre mim</h1>
+
+    <p>Sou Designer Sênior com atuação focada em <strong>UX, UI e performance de produtos digitais</strong>, trabalhando na interseção entre design, tecnologia e negócio.</p>
+
+    <p>Ao longo da minha trajetória, atuei em contextos de e-commerce, saúde digital, marketing de produto e eventos, lidando com desafios reais de conversão, retenção e posicionamento de marca. Já conduzi reestruturações de presença digital e otimização de jornadas com foco em reduzir fricção e aumentar resultados.</p>
+
+    <p>Meu background em <strong>Engenharia de Software</strong> influencia profundamente minha forma de pensar design: eu não crio apenas interfaces bonitas, mas soluções viáveis, consistentes e sustentáveis, pensadas para funcionar no mundo real — com restrições técnicas, alinhamento com stakeholders e rapidez de entrega.</p>
+
+    <p>Em UX, trabalho com <strong>arquitetura de informação, hierarquia visual e clareza cognitiva</strong>. Em UI, transformo essa lógica em interfaces elegantes, legíveis e coerentes, mantendo consistência visual e identidade ao longo de toda a experiência.</p>
+
+    <p>Também atuo com visão 360º: do produto digital ao conteúdo e motion, garantindo unidade visual e uma experiência contínua entre canais e pontos de contato.</p>
+
+    <p>Hoje, atuo como um designer que pensa como produto, executa com profundidade e decide com orientação a impacto — colaborando com times multidisciplinares e lideranças que buscam mais do que estética: buscam clareza, confiança e resultado.</p>
+  </div>
+</div>
+
+<div id="leftcolumn">
+<div id="leftcontent">
+      <center><figure class="image"><img class="is-rounded" src="/images/matheus.png"></figure></center>
+      <div id="textinfo">
+      <span id="nome">Matheus</span>
+      <h2>8 Anos de experiencia</h2>
+      <h2>Designer Digital Senior</h2>
+      </div>
+</div>
+<div class="about-back-wrap">
+  <button class="back-btn js-back" aria-label="Voltar">←</button>
+</div>
+</div>
+</div>
+
+
+<div class="content" id="contato">
+  <div id="text-content">
+
+    <div class="page-header">
+      <h1 style="margin:0;">contato</h1>
+
+      <button class="back-btn js-back back-btn--icon" type="button" aria-label="Voltar">
+        <span class="back-icon" aria-hidden="true">←</span>
+      </button>
+    </div>
+
+    <div class="columns is-mobile" style="margin-top:20%;">
+      <div class="column">
+        <div class="field">
+          <div class="control">
+            <input class="input is-large is-grey-lighter" type="text" placeholder="Nome">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <input class="input is-large is-grey-lighter" placeholder="Email">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <div class="select is-large is-grey-lighter" style="width: 100%;">
+              <select style="width: 100%;">
+                <option selected>Escolha o assunto</option>
+                <option>Propostas</option>
+                <option>Orçamento</option>
+                <option>Propostas de trabalho</option>
+                <option>Direitos Autorais</option>
+                <option>Outros</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <textarea class="textarea is-large is-grey-lighter" placeholder="Mensagem"></textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <div class="control">
+            <button class="button is-large is-grey-lighter" style="background-color: #16889A; color: #fff;">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="social">
+      <a href="https://www.behance.net/matheusvalois1" target="_blank"><i class="fa-brands fa-behance fa-2xl"></i></a>
+      <a href="https://www.linkedin.com/in/matheus-valois-29b8b2114/" target="_blank"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+      <a href="https://www.instagram.com/mavaloisc" target="_blank"><i class="fa-brands fa-instagram fa-2xl"></i></a>
+      <a href="http://wa.me/5511935853750" target="_blank"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer" id="footer"><span style="font-style: italic; font-weight: 400;">Pense fora da caixa.</span> <br> Designed and developed by Valois  </div>
+<script>
+function on(img) {
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("imgoverlay").src = img;
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+    <script type="module" src="./src/main.js"></script>
+    <script>
+      
+(() => {
+  const elWrap = document.getElementById("microcopy");
+  const elText = document.getElementById("microText");
+
+  if (!elWrap || !elText) return;
+
+  const lines = [
+    "Gire o cubo para explorar",
+    "Clique no cubo para navegar"
+  ];
+
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+  async function typeText(text, speed = 60){
+    for (let i = 0; i <= text.length; i++){
+      elText.textContent = text.slice(0, i);
+      await wait(speed);
+    }
+  }
+
+  async function deleteText(speed = 45){
+    const text = elText.textContent;
+    for (let i = text.length; i >= 0; i--){
+      elText.textContent = text.slice(0, i);
+      await wait(speed);
+    }
+  }
+
+  async function loop(){
+    // pequena espera inicial
+    await wait(600);
+
+    while(true){
+      for (const line of lines){
+        elWrap.style.opacity = "1";          // fade in
+        await wait(620);
+
+        await typeText(line);
+        await wait(1600);
+
+        await deleteText();
+        await wait(750);
+
+        elWrap.style.opacity = "0";          // fade out
+        await wait(900);
+      }
+    }
+  }
+
+  loop();
+})();
+</script>
+<!-- CASE MODAL (abre cases do portfolio) -->
+<div id="caseOverlay" class="case-overlay" aria-hidden="true">
+  <div class="case-shell" role="dialog" aria-modal="true" aria-label="Detalhes do projeto">
+    <button class="case-close" type="button" aria-label="Fechar">✕</button>
+
+    <!-- viewport com scroll interno -->
+    <div class="case-viewport">
+      <div id="caseContent" class="case-content">
+        <!-- conteúdo entra via JS -->
+      </div>
+    </div>
+  </div>
+</div>
+    </body>
+</html>

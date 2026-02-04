@@ -1,0 +1,772 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-family: 'M PLUS Rounded 1c', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#hinfo{
+  color: rgba(22, 136, 154, 0.95);
+}
+
+.page-header{
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body{
+  margin: 0;
+  min-width: 320px;
+  padding-bottom: 72px; /* espaço pro footer fixo */
+  min-height: 100vh;
+  display: block;          /* importante */
+  background: white;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vanilla:hover {
+  filter: drop-shadow(0 0 2em #f7df1eaa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+
+.back-btn{
+  all: unset;
+  cursor: pointer;
+
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1;
+
+  color: var(--accent-blue); /* 🔵 azul padrão do site */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 8px;
+}
+
+.back-btn:hover{
+  opacity: 0.7;
+}
+
+.back-btn:active{
+  transform: translateY(0px) scale(0.98);  /* sensação de clique */
+  box-shadow: none;
+}
+
+.back-btn:focus-visible{
+  outline: 3px solid rgba(22, 136, 154, 0.35);
+  outline-offset: 2px;
+}
+
+.back-icon{
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* versão só ícone */
+.back-btn--icon{
+  padding: 10px 12px;
+  border-radius: 999px;
+}
+
+.back-btn--icon .back-text{
+  display: none;
+}
+
+.theme-dark body {
+  background: #0B1416;
+}
+
+.theme-dark #title,
+.theme-dark #info,
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark .footer,
+.theme-dark .social a {
+  color: #EAF6F8 !important;
+}
+
+.theme-dark .content #rightcolumn,
+.theme-dark #text-content,
+.theme-dark .content #rightcontent {
+  background: #0B1416;
+}
+
+.theme-dark .content #leftcolumn {
+  background: #0E6E7C;
+}
+
+.theme-dark .img-content {
+  background-color: #0E6E7C;
+}
+
+/* inputs do contato (Bulma) */
+.theme-dark .input,
+.theme-dark .textarea,
+.theme-dark select {
+  background: #0F1E21 !important;
+  color: #EAF6F8 !important;
+  border-color: rgba(234, 246, 248, 0.15) !important;
+}
+
+.theme-dark .input::placeholder,
+.theme-dark .textarea::placeholder {
+  color: rgba(234, 246, 248, 0.5) !important;
+}
+
+/* botão voltar no dark */
+.theme-dark .back-btn{
+  background: transparent;
+  border-color: rgba(234, 246, 248, 0.35);
+  color: #EAF6F8;
+}
+.theme-dark .back-btn:hover{
+  background-color: rgba(234, 246, 248, 0.08);
+}
+
+body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcolumn {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+.footer{
+  margin: 0 !important;
+  border: 0 !important;
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0 !important;
+  z-index: 5000;
+
+  text-align: center;
+  letter-spacing: 6px;
+
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+
+  background: rgba(255,255,255,0.92) !important;
+}
+
+/* mobile */
+@media (max-width: 540px){
+  .footer{
+    letter-spacing: 3px;
+    font-size: 12px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* dark mode */
+.theme-dark .footer{
+  background: rgba(7, 13, 15, 0.70) !important;
+  color: rgba(234, 246, 248, 0.70) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.theme-dark .footer *{
+  color: inherit !important;
+}
+
+/* ===== UI Overlay (título + microcopy + label) ===== */
+#title, #microcopy, #info{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2500;           /* acima do canvas (render = 1999) */
+  pointer-events: none;    /* não atrapalha o clique/drag no cubo */
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+/* Título */
+#title{
+  top: 48px;
+  width: auto;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 18px;
+  font-size: clamp(52px, 6vw, 110px);
+  color: #16889A;
+}
+
+/* Microcopy animada: entre título e cubo */
+#microcopy{
+  top: calc(48px + clamp(52px, 6vw, 110px) + 24px); /* abaixo do valois */
+  font-size: clamp(14px, 1.4vw, 18px);
+  letter-spacing: 1.5px;
+  color: rgba(230, 240, 242, 0.70);
+  opacity: 0.75;
+  transition: opacity .45s ease;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 2600; /* acima do title só por garantia */
+}
+
+/* Quando uma página está aberta, não deixa a microcopy sobrepor conteúdo */
+.page-open #microcopy{
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(-6px);
+  pointer-events: none;
+}
+
+/* Se você quiser garantir 100% (nem ocupa nada / nem pisca) */
+.page-open #microcopy{
+  display: none !important;
+}
+
+.theme-dark #microcopy{
+  color: rgba(230, 240, 242, 0.65);
+}
+
+/* Cursor piscando */
+.cursor{
+  display: inline-block;
+  margin-left: 6px;
+  opacity: 1;
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@keyframes blink{
+  50% { opacity: 0; }
+}
+
+/* Label da face: abaixo do cubo */
+#info{
+  top: 70vh; /* ajusta a “altura do label” abaixo do cubo */
+  width: 100%;
+  text-align: center;
+  font-size: clamp(18px, 2.2vw, 34px);
+  letter-spacing: 10px;
+  color: rgba(230, 240, 242, 0.35); /* discreto */
+}
+
+/* Se quiser no light também ficar bonito */
+body:not(.theme-dark) #microcopy{
+  color: rgba(22, 136, 154, 0.55);
+}
+body:not(.theme-dark) #info{
+  color: rgba(22, 136, 154, 0.30);
+}
+
+/* ===== CASE MODAL ===== */
+.case-overlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 999999;              /* acima de tudo */
+  background: rgba(0,0,0,.18);  /* leve, só pra dar profundidade */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.case-overlay.is-open{ display: flex; }
+
+.case-shell{
+  width: min(980px, calc(100vw - 48px));
+  height: min(86vh, 820px);
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+
+  /* “vidro” */
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 30px 90px rgba(0,0,0,.25);
+
+  transform: translateY(12px) scale(.98);
+  opacity: 0;
+  transition: transform .22s ease, opacity .22s ease;
+}
+
+.case-overlay.is-open .case-shell{
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Scroll interno */
+.case-viewport{
+  height: 100%;
+  overflow: auto;
+  padding: 28px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* botão fechar */
+.case-close{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.15);
+  background: rgba(255,255,255,.7);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+
+.case-close:hover{
+  background: rgba(255,255,255,.95);
+}
+
+/* conteúdo interno */
+.case-content{
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  color: #0b1a1c;
+}
+
+.case-hero{
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.case-hero h1{
+  margin: 0;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: .06em;
+}
+
+.case-meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  opacity: .8;
+  font-size: 14px;
+}
+
+.case-section{
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+
+.case-section h2{
+  margin: 0 0 10px;
+  font-size: 18px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+.case-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.case-grid img{
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  display: block;
+}
+
+/* Responsivo */
+@media (max-width: 720px){
+  .case-hero h1{ font-size: 36px; }
+  .case-grid{ grid-template-columns: 1fr; }
+  .case-viewport{ padding: 18px; }
+}
+
+/* ===== Tema dark (se você usa .theme-dark no body/html) ===== */
+.theme-dark .case-shell{
+  background: rgba(10,16,18,.72);
+  border: 1px solid rgba(255,255,255,.10);
+}
+.theme-dark .case-content{ color: rgba(255,255,255,.92); }
+.theme-dark .case-section{ border-top-color: rgba(255,255,255,.10); }
+.theme-dark .case-close{
+  background: rgba(20,30,34,.55);
+  border-color: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.9);
+}
+
+/* ===== Scrollbar do Case Modal ===== */
+.case-scroll{
+  scrollbar-gutter: stable; /* evita layout “pular” quando aparece */
+}
+
+/* Firefox */
+.case-scroll{
+  scrollbar-width: thin;
+  scrollbar-color: #16889A transparent; /* thumb | track */
+}
+
+/* Chrome / Edge / Safari */
+.case-scroll::-webkit-scrollbar{
+  width: 10px;
+}
+
+.case-scroll::-webkit-scrollbar-track{
+  background: transparent;     /* trilha invisível */
+}
+
+.case-scroll::-webkit-scrollbar-thumb{
+  background: transparent;     /* sem preenchimento */
+  border: 2px solid #16889A;   /* contorno azul */
+  border-radius: 999px;
+}
+
+/* hover: um pouquinho mais “presente” (opcional) */
+.case-scroll::-webkit-scrollbar-thumb:hover{
+  background: rgba(22, 136, 154, 0.12);
+}
+
+/* opcional: remove os botões antigos (quando aparecem) */
+.case-scroll::-webkit-scrollbar-button{
+  display: none;
+}
+
+.cases-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1024px){
+  .cases-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px){
+  .cases-grid{ grid-template-columns: 1fr; }
+}
+
+#portfolio.content{
+  position: fixed;
+  inset: 0;
+  height: auto !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
+  padding: 32px 6vw 96px;
+  padding-top: 0 !important;
+
+  background: rgba(255,255,255,.92);   /* ✅ light */
+  backdrop-filter: none;               /* ✅ sem blur constante no fundo */
+  -webkit-backdrop-filter: none;
+  z-index: 3000;
+}
+
+
+.theme-dark #portfolio.content{
+  background: rgba(7,13,15,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* garante que o conteúdo não limite em 60% nem cause “faixa branca” */
+#portfolio #text-content{
+  width: min(1100px, 92vw) !important;
+  margin: 0 auto !important;
+}
+
+/* evita o body criar scroll “duplicado”/faixa branca */
+body{
+  overflow: hidden;
+}
+
+/* ===== GRID DOS CASES ===== */
+.cases-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+@media (max-width: 980px){
+  .cases-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px){
+  .cases-grid{ grid-template-columns: 1fr; }
+}
+
+.case-thumb{
+  width: 100%;
+  border: 0;
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(22,136,154,0.35);
+  border-radius: 18px;
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  color: inherit;
+}
+
+.case-thumb:hover{
+  transform: translateY(-2px);
+  border-color: rgba(22,136,154,0.75);
+  box-shadow: rgba(0,0,0,0.30) 0 18px 50px;
+}
+
+.case-thumb img{
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+.case-thumb-title{
+  display: block;
+  margin-top: 12px;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.case-thumb-sub{
+  display: block;
+  opacity: .75;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.portfolio-header{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  /* mantém o espaçamento interno */
+  padding: 14px 6vw;
+
+  /* 🔥 truque: anula o padding lateral do #portfolio */
+  margin-left: -6vw;
+  margin-right: -6vw;
+
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#portfolio.is-scrolled .portfolio-header{
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* quando rolar + dark mode */
+.theme-dark #portfolio.is-scrolled .portfolio-header{
+  background: rgba(7,13,15,0.85);
+}
+
+.portfolio-title{
+  margin: 0;
+  font-size: clamp(52px, 8vw, 112px);
+  letter-spacing: 2px;
+}
+
+.case-modal{
+  scrollbar-gutter: stable both-edges; /* reserva espaço do scroll */
+}
+
+.case-modal__dialog{
+  position: relative;
+  overflow: hidden;       /* mantém cantos perfeitos */
+  border-radius: 22px;
+}
+
+.case-modal__header{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+  background: rgba(7,13,15,0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.case-modal__body{
+  max-height: min(78vh, 820px);
+  overflow: auto;
+  padding: 16px 18px 18px;
+  padding-right: 14px; /* “respiro” pra scrollbar não comer nada */
+}
+
+.case-modal__body{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22,136,154,0.9) transparent;
+}
+
+/* Chrome/Edge/Safari */
+.case-modal__body::-webkit-scrollbar{
+  width: 10px;
+}
+.case-modal__body::-webkit-scrollbar-track{
+  background: transparent;
+}
+.case-modal__body::-webkit-scrollbar-thumb{
+  background: transparent;                  /* sem preenchimento */
+  border: 2px solid rgba(22,136,154,0.9);   /* só contorno */
+  border-radius: 999px;
+}
+.case-modal__body::-webkit-scrollbar-thumb:hover{
+  border-color: rgba(22,136,154,1);
+}
+
+
+/* Container do botão voltar na coluna do perfil (Sobre) */
+.about-back-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top: 18px;
+}
+
+.about-back-wrap .back-btn{
+  all: unset;
+  cursor: pointer;
+
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+
+  background: rgba(255,255,255,0.10);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  transition: transform .18s ease, opacity .18s ease;
+}
+
+.about-back-wrap .back-btn:hover{
+  transform: translateY(-2px);
+  opacity: .9;
+}
+
+/* melhora leitura do texto no Sobre */
+#rightcontent.about-text{
+  text-align: left;       /* melhor pra web do que justify */
+  max-width: 96ch;
+  line-height: 1.9;
+  font-size: 18px;
+}
+
+#rightcontent.about-text p{
+  margin: 0 0 16px 0;
+  opacity: 0.92;
+}
+
+#rightcontent.about-text strong{
+  font-weight: 700;
+  color: var(--accent-blue, #0AA6C6);
+}
+
+/* vídeos se comportarem como imagens no grid */
+.case-grid img,
+.case-grid video{
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+}
+
+/* evita vídeo “esticado” e mantém estética */
+.case-grid video{
+  width: 100%;
+  height: auto;          /* 🔥 deixa o browser respeitar a proporção */
+  display: block;
+  border-radius: 14px;
+
+  background: #000;
+  object-fit: contain;   /* 🔥 nunca corta */
+}
+
+.desc {
+  font-size: 40px;
+}
