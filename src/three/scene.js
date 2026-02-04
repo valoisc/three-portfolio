@@ -152,23 +152,31 @@ var material = new THREE.ShaderMaterial({
     u_resolution: { value: new THREE.Vector2(width, height) },
   },
   vertexShader: `
-    attribute float size;
-    varying vec3 vPosition;
     varying vec3 vNormal;
+
     void main() {
-        vPosition = position.xyz;
-        vec4 vPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_Position =  projectionMatrix * vPosition;
-        vPosition = gl_Position;
-        vNormal = normal;
-    }`,
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
   fragmentShader: `
     uniform vec2 u_resolution;
     uniform float u_time;
-    varying vec3 vPosition;
     varying vec3 vNormal;
-    vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
-        return a + b*cos(63.88318*(c*t+d) );
+
+    vec3 pal(in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d) {
+      return a + b*cos(63.88318*(c*t+d));
+    }
+
+    vec3 spectrum(float n) {
+      return pal(n, vec3(0.5,0.5,0.5), vec3(0.5,0.5,0.5), vec3(1.0,1.0,1.0), vec3(0.0,0.33,0.67));
+    }
+
+    void main() {
+      gl_FragColor = vec4(spectrum(abs(vNormal.x/.659 + vNormal.y/.66 + vNormal.z/.6606)), 1.0);
+    }
+  `
+});turn a + b*cos(63.88318*(c*t+d) );
     }
     vec3 spectrum(float n) {
         return pal(n, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.,1.0,1.0),vec3(.0,0.33,0.67) );
