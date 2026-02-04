@@ -85,8 +85,10 @@ const loadingManager = new THREE.LoadingManager(() => {
 
 const fontLoader = new FontLoader(loadingManager);
 
-// usa BASE_URL do Vite (evita quebrar se estiver em subpasta)
-const FONT_URL = `${import.meta.env.BASE_URL}font/font_icon.json`;
+// usa BASE_URL do Vite (fallback para ambientes sem Vite)
+const BASE_URL = import.meta?.env?.BASE_URL ?? '/';
+const NORMALIZED_BASE_URL = BASE_URL.endsWith('/') ? BASE_URL : `${BASE_URL}/`;
+const FONT_URL = `${NORMALIZED_BASE_URL}font/font_icon.json`;
 
 function addIcon(char, x, y, z, rot = {}) {
   if (!ICON_FONT) return;
