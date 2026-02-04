@@ -1,5 +1,5 @@
 import './style.css';
-import './three/scene.js';
+//import './three/scene.js';
 import './favicon.js';
 
 // ===== Case Modal (Portfolio) =====
@@ -296,4 +296,23 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCase();
   });
+});
+
+const btnProjetos = document.getElementById("btn-projetos");
+const btnSobre = document.getElementById("btn-sobre");
+const btnContato = document.getElementById("btn-contato");
+
+btnProjetos?.addEventListener("click", () => {
+  console.log("Clique: Projetos");
+  // Exemplo: window.location.href = "/projetos";
+});
+
+btnSobre?.addEventListener("click", () => {
+  console.log("Clique: Sobre");
+  // Exemplo: window.location.href = "/sobre";
+});
+
+btnContato?.addEventListener("click", () => {
+  console.log("Clique: Contato");
+  // Exemplo: window.location.href = "/contato";
 });
