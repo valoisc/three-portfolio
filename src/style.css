@@ -56,17 +56,18 @@ body{
   background: white;
 }
 
-/* trava o scroll do navegador apenas no Sobre (desktop) */
-@media (min-width: 901px){
-  html.about-open,
-  body.about-open{
-    overflow: hidden;
-    height: 100%;
-  }
+/* trava o scroll do navegador no Sobre (todas as telas) */
+html.about-open,
+body.about-open{
+  overflow: hidden;
+  height: 100%;
+}
 
-  body.about-open{
-    padding-bottom: 0;
-  }
+body.about-open{
+  padding-bottom: 0;
+  position: fixed; /* bloqueia scroll do navegador (inclusive antigos) */
+  width: 100%;
+  inset: 0;
 }
 
 #bg-net{
@@ -944,6 +945,9 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   height: 100vh;
   min-height: 100vh;
   overflow: hidden; /* impede rolagem da pÃ¡gina inteira */
+  position: fixed;  /* garante "canvas" fixo */
+  inset: 0;
+  overscroll-behavior: none;
 }
 
 #sobre #leftcolumn{
@@ -966,8 +970,9 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 #sobre #rightcontent{
   height: 100%;
   overflow-y: auto;
-  padding: 32px 5vw 32px;
+  padding: 32px calc(5vw + 10px) 32px 5vw; /* dá mais respiro à direita */
   box-sizing: border-box;
+  scrollbar-gutter: stable; /* evita layout pular com a scrollbar */
 }
 
 #sobre #rightcontent{
@@ -993,7 +998,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 
 @media (max-width: 900px){
   #sobre.content{
-    overflow: auto;
+    overflow: hidden;
   }
 
   #sobre #leftcolumn,
@@ -1004,8 +1009,8 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   }
 
   #sobre #rightcontent{
-    height: auto;
-    overflow: visible;
+    height: 100%;
+    overflow-y: auto;
   }
 }
 
