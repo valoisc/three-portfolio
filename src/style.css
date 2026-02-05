@@ -5,7 +5,7 @@
   --net-dot: rgba(22, 136, 154, 0.6);
   --net-line: rgba(22, 136, 154, 0.18);
   --net-glow: rgba(22, 136, 154, 0.35);
-  --screen-transition: 700ms;
+  --screen-transition: 300ms;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

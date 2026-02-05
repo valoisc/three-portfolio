@@ -5,7 +5,7 @@ import './style.css';
 window.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('mainNav');
   const sections = ['portfolio', 'sobre', 'contato'];
-  const TRANSITION_MS = 700;
+  const TRANSITION_MS = 300;
   let currentSection = null;
 
   function hideSection(el) {
