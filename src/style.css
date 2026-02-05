@@ -871,27 +871,29 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 .about-back-wrap{
   display:flex;
   justify-content:center;
-  margin-top: 18px;
+  margin-top: auto;
+  padding-bottom: 8px;
 }
 
 .about-back-wrap .back-btn{
   all: unset;
   cursor: pointer;
 
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   border-radius: 999px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  color: #0E6E7C;
 
-  background: rgba(255,255,255,0.10);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  background: #ffffff;
+  border: 2px solid rgba(14, 110, 124, 0.6);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.22);
   transition: transform .18s ease, opacity .18s ease;
 }
 
