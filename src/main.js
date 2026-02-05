@@ -20,11 +20,13 @@ window.addEventListener('DOMContentLoaded', () => {
       el.style.display = 'block';
     }
     nav?.classList.add('is-hidden');
+    document.body.classList.add('page-open');
   }
 
   function goHome() {
     hideAllSections();
     nav?.classList.remove('is-hidden');
+    document.body.classList.remove('page-open');
   }
 
   document.querySelectorAll('.js-nav').forEach((btn) => {
@@ -41,6 +43,28 @@ window.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       goHome();
     });
+  });
+
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+  function setTheme(isDark) {
+    root.classList.toggle('theme-dark', isDark);
+    themeToggle?.setAttribute('aria-pressed', String(isDark));
+    const label = themeToggle?.querySelector('.toggle-label');
+    if (label) label.textContent = isDark ? 'Modo claro' : 'Modo noturno';
+    if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0B1416' : '#ffffff');
+  }
+
+  const storedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+  setTheme(storedTheme ? storedTheme === 'dark' : prefersDark);
+
+  themeToggle?.addEventListener('click', () => {
+    const isDark = !root.classList.contains('theme-dark');
+    setTheme(isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 });
 
@@ -338,4 +362,143 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCase();
   });
+});
+
+// ===== Background Network (Home) =====
+window.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('bg-net');
+  if (!(canvas instanceof HTMLCanvasElement)) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const mouse = { x: -9999, y: -9999, active: false };
+  const points = [];
+  let width = 0;
+  let height = 0;
+  let colors = { line: 'rgba(22,136,154,0.18)', dot: 'rgba(22,136,154,0.6)', glow: 'rgba(22,136,154,0.35)' };
+
+  function readColors() {
+    const styles = getComputedStyle(document.documentElement);
+    colors = {
+      line: styles.getPropertyValue('--net-line').trim() || colors.line,
+      dot: styles.getPropertyValue('--net-dot').trim() || colors.dot,
+      glow: styles.getPropertyValue('--net-glow').trim() || colors.glow,
+    };
+  }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildPoints();
+  }
+
+  function buildPoints() {
+    const area = width * height;
+    const count = Math.max(36, Math.min(140, Math.floor(area / 14000)));
+    points.length = 0;
+    for (let i = 0; i < count; i += 1) {
+      points.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: 1.2 + Math.random() * 1.8,
+      });
+    }
+  }
+
+  function handleMove(x, y) {
+    mouse.x = x;
+    mouse.y = y;
+    mouse.active = true;
+  }
+
+  window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+  window.addEventListener('mouseleave', () => { mouse.active = false; });
+  window.addEventListener(
+    'touchmove',
+    (e) => {
+      const touch = e.touches?.[0];
+      if (touch) handleMove(touch.clientX, touch.clientY);
+    },
+    { passive: true }
+  );
+  window.addEventListener('touchend', () => { mouse.active = false; });
+  window.addEventListener('resize', resize);
+
+  new MutationObserver(readColors).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  readColors();
+  resize();
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    const linkDist = Math.min(150, Math.max(90, Math.sqrt(width * height) / 10));
+    const mouseRange = 140;
+
+    for (const p of points) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x <= 0 || p.x >= width) p.vx *= -1;
+      if (p.y <= 0 || p.y >= height) p.vy *= -1;
+
+      if (mouse.active) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        if (dist < mouseRange) {
+          const force = (mouseRange - dist) / mouseRange;
+          p.vx += (dx / dist) * force * 0.05;
+          p.vy += (dy / dist) * force * 0.05;
+        }
+      }
+    }
+
+    ctx.lineWidth = 1;
+    for (let i = 0; i < points.length; i += 1) {
+      for (let j = i + 1; j < points.length; j += 1) {
+        const a = points[i];
+        const b = points[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < linkDist) {
+          const alpha = 1 - dist / linkDist;
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = colors.line;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = colors.dot;
+    ctx.shadowColor = colors.glow;
+    ctx.shadowBlur = 8;
+    for (const p of points) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 });

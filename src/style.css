@@ -2,6 +2,9 @@
 
 :root {
   --accent-blue: #16889A;
+  --net-dot: rgba(22, 136, 154, 0.6);
+  --net-line: rgba(22, 136, 154, 0.18);
+  --net-glow: rgba(22, 136, 154, 0.35);
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -46,12 +49,96 @@ a:hover {
 body{
   margin: 0;
   min-width: 320px;
-  padding-bottom: 72px; /* espa�o pro footer fixo */
+  padding-bottom: 72px; /* espaï¿½o pro footer fixo */
   min-height: 100vh;
   display: block;          /* importante */
   background: white;
 }
 
+
+#bg-net{
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.theme-toggle{
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 3200;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(22, 136, 154, 0.35);
+  background: rgba(255,255,255,0.9);
+  color: #16889A;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 12px;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease;
+}
+
+.theme-toggle:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(22, 136, 154, 0.20);
+}
+
+.theme-toggle:focus-visible{
+  outline: 3px solid rgba(22, 136, 154, 0.35);
+  outline-offset: 2px;
+}
+
+.toggle-track{
+  width: 42px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(22, 136, 154, 0.15);
+  border: 1px solid rgba(22, 136, 154, 0.35);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+.toggle-thumb{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #16889A;
+  transform: translateX(0);
+  transition: transform .2s ease, background-color .2s ease;
+}
+
+.theme-dark .theme-toggle{
+  background: rgba(7, 13, 15, 0.8);
+  color: #EAF6F8;
+  border-color: rgba(234, 246, 248, 0.25);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.theme-dark .toggle-track{
+  background: rgba(234, 246, 248, 0.12);
+  border-color: rgba(234, 246, 248, 0.35);
+}
+
+.theme-dark .toggle-thumb{
+  background: #EAF6F8;
+  transform: translateX(18px);
+}
+
+.page-open .theme-toggle{
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
 .nav-buttons{
   position: fixed;
   inset: 0;
@@ -86,6 +173,23 @@ body{
   transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
 }
 
+
+@media (max-width: 720px){
+  .nav-buttons{
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-btn{
+    width: min(320px, 84vw);
+  }
+
+  .theme-toggle{
+    top: 16px;
+    right: 16px;
+    padding: 8px 12px;
+  }
+}
 .nav-btn:hover{
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(22, 136, 154, 0.25);
@@ -193,6 +297,12 @@ button:focus-visible {
 
 .back-btn--icon .back-text{
   display: none;
+}
+
+.theme-dark {
+  --net-dot: rgba(234, 246, 248, 0.7);
+  --net-line: rgba(234, 246, 248, 0.2);
+  --net-glow: rgba(234, 246, 248, 0.4);
 }
 
 .theme-dark body {
@@ -362,10 +472,10 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 }
 
 /* Se quiser no light tamb�m ficar bonito */
-body:not(.theme-dark) #microcopy{
+:root:not(.theme-dark) #microcopy{
   color: rgba(22, 136, 154, 0.55);
 }
-body:not(.theme-dark) #info{
+:root:not(.theme-dark) #info{
   color: rgba(22, 136, 154, 0.30);
 }
 
@@ -811,3 +921,6 @@ body:not(.theme-dark) #info{
 .desc {
   font-size: 40px;
 }
+
+
+
