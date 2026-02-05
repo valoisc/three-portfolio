@@ -41,6 +41,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     nav?.classList.add('is-hidden');
     document.body.classList.add('page-open');
+    const isAbout = id === 'sobre';
+    document.body.classList.toggle('about-open', isAbout);
+    document.documentElement.classList.toggle('about-open', isAbout);
   }
 
   function goHome() {
@@ -49,6 +52,8 @@ window.addEventListener('DOMContentLoaded', () => {
     window.setTimeout(() => {
       nav?.classList.remove('is-hidden');
       document.body.classList.remove('page-open');
+      document.body.classList.remove('about-open');
+      document.documentElement.classList.remove('about-open');
     }, TRANSITION_MS);
   }
 

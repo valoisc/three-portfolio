@@ -56,6 +56,18 @@ body{
   background: white;
 }
 
+/* trava o scroll do navegador apenas no Sobre (desktop) */
+@media (min-width: 901px){
+  html.about-open,
+  body.about-open{
+    overflow: hidden;
+    height: 100%;
+  }
+
+  body.about-open{
+    padding-bottom: 0;
+  }
+}
 
 #bg-net{
   position: fixed;
@@ -994,6 +1006,28 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   #sobre #rightcontent{
     height: auto;
     overflow: visible;
+  }
+}
+
+@media (max-width: 540px){
+  /* evita corte do botÃ£o voltar no Sobre */
+  #sobre #leftcolumn{
+    height: 34vh;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+
+  .about-back-wrap{
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+
+  .about-back-wrap .back-btn{
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
   }
 }
 
