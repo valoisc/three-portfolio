@@ -5,19 +5,39 @@ import './style.css';
 window.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('mainNav');
   const sections = ['portfolio', 'sobre', 'contato'];
+  const TRANSITION_MS = 320;
+  let currentSection = null;
 
-  function hideAllSections() {
+  function hideSection(el) {
+    if (!el) return;
+    el.classList.remove('is-active');
+    el.classList.add('is-hiding');
+    window.setTimeout(() => {
+      el.style.display = 'none';
+      el.classList.remove('is-hiding');
+    }, TRANSITION_MS);
+  }
+
+  function hideAllSections(exceptId = null) {
     sections.forEach((id) => {
+      if (id === exceptId) return;
       const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
+      if (el && el.style.display !== 'none') {
+        hideSection(el);
+      }
     });
   }
 
   function showSection(id) {
-    hideAllSections();
     const el = document.getElementById(id);
     if (el) {
+      if (currentSection === id) return;
+      hideAllSections(id);
       el.style.display = 'block';
+      // forÃ§a reflow para garantir transiÃ§Ã£o
+      void el.offsetHeight;
+      el.classList.add('is-active');
+      currentSection = id;
     }
     nav?.classList.add('is-hidden');
     document.body.classList.add('page-open');
@@ -25,8 +45,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function goHome() {
     hideAllSections();
-    nav?.classList.remove('is-hidden');
-    document.body.classList.remove('page-open');
+    currentSection = null;
+    window.setTimeout(() => {
+      nav?.classList.remove('is-hidden');
+      document.body.classList.remove('page-open');
+    }, TRANSITION_MS);
   }
 
   document.querySelectorAll('.js-nav').forEach((btn) => {

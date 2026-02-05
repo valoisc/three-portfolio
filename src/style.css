@@ -149,10 +149,15 @@ body{
   flex-wrap: wrap;
   padding: 24px;
   z-index: 3000;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .28s ease, transform .28s ease;
 }
 
 .nav-buttons.is-hidden{
-  display: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
 }
 
 .nav-btn{
@@ -203,6 +208,20 @@ body{
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+/* ===== TransiÃ§Ã£o entre telas ===== */
+.content{
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .32s ease, transform .32s ease;
+  pointer-events: none;
+}
+
+.content.is-active{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 #app {
