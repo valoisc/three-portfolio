@@ -1050,10 +1050,35 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 }
 
 @media (max-width: 540px){
-  /* evita corte do botÃ£o voltar no Sobre */
+  :root{
+    --about-left-height: 34vh;
+  }
+
   #sobre #leftcolumn{
-    height: 34vh;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--about-left-height);
     padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+
+  #sobre #rightcolumn{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--about-left-height);
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #sobre #rightcontent{
+    height: calc(100vh - var(--about-left-height));
+    height: calc(100dvh - var(--about-left-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 
   .about-back-wrap{
