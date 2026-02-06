@@ -65,9 +65,8 @@ body.about-open{
 
 body.about-open{
   padding-bottom: 0;
-  position: fixed; /* bloqueia scroll do navegador (inclusive antigos) */
+  position: relative; /* evita bug de scroll interno no Safari */
   width: 100%;
-  inset: 0;
 }
 
 #bg-net{
@@ -338,6 +337,34 @@ button:focus-visible {
   display: none;
 }
 
+/* botÃ£o voltar maior e com mais contraste na pÃ¡gina de contato */
+#contato .back-btn{
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 999px;
+  background: #16889A;
+  color: #ffffff;
+  border: 2px solid rgba(22,136,154,0.75);
+  box-shadow: 0 12px 28px rgba(22,136,154,0.35);
+}
+
+#contato .back-icon{
+  font-size: 22px;
+}
+
+#contato .back-btn:hover{
+  opacity: 1;
+  background: #0E6E7C;
+}
+
+.theme-dark #contato .back-btn{
+  background: #EAF6F8;
+  color: #0B1416;
+  border-color: rgba(234,246,248,0.6);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+}
+
 .theme-dark {
   --net-dot: rgba(234, 246, 248, 0.7);
   --net-line: rgba(234, 246, 248, 0.2);
@@ -562,6 +589,8 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   overflow: auto;
   padding: 28px;
   -webkit-overflow-scrolling: touch;
+  position: relative;
+  z-index: 1;
 }
 
 /* bot�o fechar */
@@ -575,10 +604,13 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   border: 1px solid rgba(0,0,0,.15);
   background: rgba(255,255,255,.7);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 700;
   line-height: 1;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
 .case-close:hover{
@@ -965,6 +997,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   width: 70%;
   margin-left: 0;
   overflow: hidden; /* trava coluna, rolagem fica no texto */
+  -webkit-overflow-scrolling: touch;
 }
 
 #sobre #rightcontent{
@@ -973,6 +1006,8 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   padding: 32px calc(5vw + 10px) 32px 5vw; /* dá mais respiro à direita */
   box-sizing: border-box;
   scrollbar-gutter: stable; /* evita layout pular com a scrollbar */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 #sobre #rightcontent{
