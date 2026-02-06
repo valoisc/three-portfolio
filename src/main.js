@@ -2,6 +2,9 @@
 import './favicon.js';
 import './style.css';
 
+const ASSET_BASE = import.meta.env.BASE_URL || '/';
+const assetUrl = (path) => `${ASSET_BASE}${String(path).replace(/^\/+/, '')}`;
+
 window.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('mainNav');
   const sections = ['portfolio', 'sobre', 'contato'];
@@ -136,13 +139,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // imagens + vídeos inline no mesmo grid
       media: [
-        { type: 'image', src: '/images/laestamparun/evento.heic', alt: 'Evento - Foto retirada por mim' },
-        { type: 'image', src: '/images/laestamparun/1.png', alt: 'Material em que fiz o Design' },
-        { type: 'image', src: '/images/laestamparun/trofeu.jpg', alt: 'Troféu que fiz para o evento' },
+        { type: 'image', src: assetUrl('images/laestamparun/evento.heic'), alt: 'Evento - Foto retirada por mim' },
+        { type: 'image', src: assetUrl('images/laestamparun/1.png'), alt: 'Material em que fiz o Design' },
+        { type: 'image', src: assetUrl('images/laestamparun/trofeu.jpg'), alt: 'Troféu que fiz para o evento' },
 
-        { type: 'video', src: '/images/laestamparun/video1.mp4', },
-        { type: 'video', src: '/images/laestamparun/video2.mp4', },
-        { type: 'video', src: '/images/laestamparun/video3.mp4', },
+        { type: 'video', src: assetUrl('images/laestamparun/video1.mp4'), },
+        { type: 'video', src: assetUrl('images/laestamparun/video2.mp4'), },
+        { type: 'video', src: assetUrl('images/laestamparun/video3.mp4'), },
       ],
     },
     unidentis: {
@@ -175,13 +178,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // imagens + vídeos inline no mesmo grid
       media: [
-        { type: 'image', src: '/images/unidentis/1.png', alt: 'Cartão de credenciado ' },
-        { type: 'image', src: '/images/unidentis/2.jpg', alt: 'Material em que fiz o Design' },
-        { type: 'image', src: '/images/unidentis/3.jpg', alt: 'Nosso Influenciador' },
-        { type: 'image', src: '/images/unidentis/4.jpg', alt: 'Gerente Comercial' },
-        { type: 'image', src: '/images/unidentis/5.jpg', alt: 'Cartão impresso' },
+        { type: 'image', src: assetUrl('images/unidentis/1.png'), alt: 'Cartão de credenciado ' },
+        { type: 'image', src: assetUrl('images/unidentis/2.jpg'), alt: 'Material em que fiz o Design' },
+        { type: 'image', src: assetUrl('images/unidentis/3.jpg'), alt: 'Nosso Influenciador' },
+        { type: 'image', src: assetUrl('images/unidentis/4.jpg'), alt: 'Gerente Comercial' },
+        { type: 'image', src: assetUrl('images/unidentis/5.jpg'), alt: 'Cartão impresso' },
 
-        { type: 'video', src: '/images/unidentis/1.mp4', },
+        { type: 'video', src: assetUrl('images/unidentis/1.mp4'), },
       ],
     },
     meltz: {
@@ -210,13 +213,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // imagens + vídeos inline no mesmo grid
       media: [
-        { type: 'image', src: '/images/meltz/1.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/2.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/3.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/4.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/5.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/6.png', alt: 'Logotipo' },
-        { type: 'image', src: '/images/meltz/7.png', alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/1.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/2.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/3.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/4.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/5.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/6.png'), alt: 'Logotipo' },
+        { type: 'image', src: assetUrl('images/meltz/7.png'), alt: 'Logotipo' },
       ],
     },
   };

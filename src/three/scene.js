@@ -5,6 +5,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 
+const ASSET_BASE = import.meta.env.BASE_URL || '/';
+const assetUrl = (path) => `${ASSET_BASE}${String(path).replace(/^\/+/, '')}`;
+
 // ===============================
 // Loader helpers
 // ===============================
@@ -297,7 +300,7 @@ function onClick(event) {
       if (!pageMode) {
         footer.style.opacity = 1.;
       }
-      const win = window.open("/misc/curriculum.pdf", '_blank');
+      const win = window.open(assetUrl('misc/curriculum.pdf'), '_blank');
       win?.focus();
       return;
     }

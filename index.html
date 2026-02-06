@@ -10,9 +10,9 @@
         <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet">
         <title>Valois Design</title>
         <link rel="icon" id="dynamic-favicon">
-        <link rel="manifest" href="/images/favicon/manifest.json">
+        <link rel="manifest" href="%BASE_URL%images/favicon/manifest.json">
         <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+        <meta name="msapplication-TileImage" content="%BASE_URL%images/favicon/ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <script type="importmap">
@@ -386,7 +386,7 @@
         <button class="nav-btn js-nav" type="button" data-target="portfolio">Portfolio</button>
         <button class="nav-btn js-nav" type="button" data-target="sobre">Sobre</button>
         <button class="nav-btn js-nav" type="button" data-target="contato">Contato</button>
-        <a class="nav-btn nav-link" href="/misc/curriculum.pdf" target="_blank" rel="noopener">Curriculum</a>
+        <a class="nav-btn nav-link" href="%BASE_URL%misc/curriculum.pdf" target="_blank" rel="noopener">Curriculum</a>
       </nav>
 
 
@@ -408,21 +408,21 @@
   <!-- La Estampa Run -->
   <div class="cases-grid">
     <button class="case-thumb js-case" type="button" data-case="lastampa">
-      <img src="/images/laestamparun/thumb.jpg" alt="La Stampa Run">
+      <img src="%BASE_URL%images/laestamparun/thumb.jpg" alt="La Stampa Run">
       <span class="case-thumb-title">La Stampa Run</span>
       <span class="case-thumb-sub">Branding • Evento • Growth</span>
     </button>
 
     <!-- Unidentis -->
     <button class="case-thumb js-case" type="button" data-case="unidentis">
-      <img src="/images/unidentis/thumb.png" alt="Unidentis">
+      <img src="%BASE_URL%images/unidentis/thumb.png" alt="Unidentis">
       <span class="case-thumb-title">Unidentis</span>
       <span class="case-thumb-sub">Healthtech • Performance</span>
     </button>
 
     <!-- Meltz -->
     <button class="case-thumb js-case" type="button" data-case="meltz">
-      <img src="/images/meltz/thumb.png" alt="Meltz Burger">
+      <img src="%BASE_URL%images/meltz/thumb.png" alt="Meltz Burger">
       <span class="case-thumb-title">Meltz Burger</span>
       <span class="case-thumb-sub">Branding • FoodService • Growth • Marketing</span>
     </button>
@@ -433,7 +433,12 @@
   
 <div id="rightcolumn">
   <div id="rightcontent" class="about-text">
-    <h1>sobre mim</h1>
+    <div class="about-header">
+      <h1>sobre mim</h1>
+      <button class="back-btn js-back back-btn--icon about-header__back" type="button" aria-label="Voltar">
+        <span class="back-icon" aria-hidden="true">&larr;</span>
+      </button>
+    </div>
 
     <p>Sou Designer Sênior com atuação focada em <strong>UX, UI e performance de produtos digitais</strong>, trabalhando na interseção entre design, tecnologia e negócio.</p>
 
@@ -457,7 +462,7 @@
         <a href="https://www.instagram.com/mavaloisc" target="_blank"><i class="fa-brands fa-instagram fa-2xl"></i></a>
         <a href="http://wa.me/5583993020166" target="_blank"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
       </div>
-      <center><figure class="image"><img class="is-rounded" src="/images/matheus.png"></figure></center>
+      <center><figure class="image"><img class="is-rounded" src="%BASE_URL%images/matheus.png"></figure></center>
       <div id="textinfo">
       <span id="nome">Matheus <span class="sobrenome">Valois</span></span>
       <h2>8 Anos de experiencia</h2>
