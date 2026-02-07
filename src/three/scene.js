@@ -13,20 +13,20 @@ const assetUrl = (path) => `${ASSET_BASE}${String(path).replace(/^\/+/, '')}`;
 // ===============================
 let ICON_FONT = null;
 let firstRender = false;
-
+const iconMeshes = [];
 function hideLoader() {
   const loadingScreen = document.getElementById('loading-screen');
   if (!loadingScreen) return;
 
   loadingScreen.classList.add('fade-out');
   setTimeout(() => {
-    // remove s� se ainda existir
+    // remove sÃ¯Â¿Â½ se ainda existir
     loadingScreen?.remove?.();
   }, 600);
 }
 
 // ===============================
-// Vari�veis globais (drag threshold)
+// VariÃ¯Â¿Â½veis globais (drag threshold)
 // ===============================
 let pointerDownPos = { x: 0, y: 0 };
 let didDrag = false;
@@ -59,7 +59,7 @@ renderer.domElement.id = 'render';
 document.body.appendChild(renderer.domElement);
 
 // ===============================
-// Anima��o digitando
+// AnimaÃ¯Â¿Â½Ã¯Â¿Â½o digitando
 // ===============================
 const microcopy = document.getElementById("microcopy");
 
@@ -78,6 +78,8 @@ var light = new THREE.PointLight(0xffffff, 1);
 light.position.set(-30, 10, 35);
 scene.add(light);
 
+const BASE_LIGHT_INTENSITY = light.intensity;
+const BASE_ALIGHT_INTENSITY = alight.intensity;
 // ===============================
 // Texts (load font ONCE, create all icons)
 // ===============================
@@ -121,10 +123,11 @@ function addIcon(char, x, y, z, rot = {}) {
   mesh.receiveShadow = true;
 
   scene.add(mesh);
+  iconMeshes.push({ mesh, baseX: x, baseY: y, baseZ: z });
 }
 
 function createIcons() {
-  // Mesmas posições/rotações do seu código original
+  // Mesmas posiÃƒÂ§ÃƒÂµes/rotaÃƒÂ§ÃƒÂµes do seu cÃƒÂ³digo original
   addIcon('\uf1fc',  1.8,  5.0,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
   addIcon('\uf06e',   2.0, -5.5,  3.2, { x: -Math.PI / 2, z:  Math.PI / 2 });
   addIcon('\uf0c6',  -5.0, -2.8,  2.0, { y: -Math.PI / 2, z:  Math.PI / 2 });
@@ -143,7 +146,7 @@ fontLoader.load(
   undefined,
   (err) => {
     console.error('Erro ao carregar font_icon.json', err);
-    // n�o deixa travar loader em produ��o
+    // nÃ¯Â¿Â½o deixa travar loader em produÃ¯Â¿Â½Ã¯Â¿Â½o
     hideLoader();
   }
 );
@@ -278,7 +281,7 @@ function toggleDarkMode() {
 })();
 
 // ===============================
-// Bot�es de voltar (HTML UI)
+// BotÃ¯Â¿Â½es de voltar (HTML UI)
 // ===============================
 document.querySelectorAll('.js-back').forEach((btn) => {
   btn.addEventListener('click', (e) => {
@@ -457,8 +460,37 @@ function render() {
     }
 
     controls.update();
-    renderer.render(scene, camera);
+    material.uniforms.u_time.value = clock.getElapsedTime();
 
+    const audioState = window.__audioReactive;
+    const audioOn = Boolean(audioState?.enabled);
+    const audioLevel = audioState?.smoothLevel ?? 0;
+
+    if (audioOn) {
+      const pulse = 1 + audioLevel * 0.35;
+      cube.scale.set(pulse, pulse, pulse);
+      const spin = 0.002 + audioLevel * 0.02;
+      cube.rotation.x += spin;
+      cube.rotation.y += spin * 1.2;
+
+      light.intensity = BASE_LIGHT_INTENSITY * (1 + audioLevel * 1.4);
+      alight.intensity = BASE_ALIGHT_INTENSITY * (1 + audioLevel * 0.8);
+
+      const t = clock.getElapsedTime();
+      iconMeshes.forEach((item, i) => {
+        const wobble = Math.sin(t * 4 + i) * (0.2 + audioLevel * 1.2);
+        item.mesh.position.z = item.baseZ + wobble;
+      });
+    } else {
+      cube.scale.set(1, 1, 1);
+      light.intensity = BASE_LIGHT_INTENSITY;
+      alight.intensity = BASE_ALIGHT_INTENSITY;
+      iconMeshes.forEach((item) => {
+        item.mesh.position.z = item.baseZ;
+      });
+    }
+
+    renderer.render(scene, camera);
     // PRIMEIRO FRAME = loader sai
     if (!firstRender) {
       firstRender = true;

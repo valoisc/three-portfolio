@@ -382,6 +382,22 @@
         <span class="toggle-label">Modo noturno</span>
       </button>
 
+      <div class="audio-control" id="audioControl">
+        <button class="audio-toggle" id="audioToggle" type="button" aria-expanded="false">
+          <span class="audio-toggle__label">Modo música</span>
+          <span class="audio-toggle__dot" aria-hidden="true"></span>
+        </button>
+        <div class="audio-panel" id="audioPanel" aria-hidden="true">
+          <div class="audio-panel__title">Fonte de áudio</div>
+          <div class="audio-row">
+            <button class="audio-btn audio-start" type="button" data-action="start-display">Capturar aba</button>
+            <button class="audio-btn audio-start" type="button" data-action="start-mic">Microfone</button>
+          </div>
+          <button class="audio-btn audio-stop" type="button" data-action="stop">Desativar</button>
+          <div class="audio-status" id="audioStatus">Desativado</div>
+        </div>
+      </div>
+
       <nav class="nav-buttons" id="mainNav" aria-label="Navegação principal">
         <button class="nav-btn js-nav" type="button" data-target="portfolio">Portfolio</button>
         <button class="nav-btn js-nav" type="button" data-target="sobre">Sobre</button>
@@ -562,6 +578,18 @@ function off() {
       <div id="caseContent" class="case-content">
         <!-- conteúdo entra via JS -->
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIVER RAID OVERLAY -->
+<div id="rrOverlay" class="rr-overlay" aria-hidden="true">
+  <div class="rr-shell" role="dialog" aria-modal="true" aria-label="River Raid">
+    <button class="rr-close" type="button" aria-label="Fechar">&times;</button>
+    <canvas id="rr-canvas"></canvas>
+    <div class="rr-hud">
+      <span>River Raid Mini</span>
+      <span class="rr-hint">Use ? → ou A D</span>
     </div>
   </div>
 </div>

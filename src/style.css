@@ -1,11 +1,23 @@
-﻿*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
 :root {
   --accent-blue: #16889A;
   --net-dot: rgba(22, 136, 154, 0.6);
   --net-line: rgba(22, 136, 154, 0.18);
   --net-glow: rgba(22, 136, 154, 0.35);
+  --rr-bg: transparent;
+  --rr-river: #16889A;
+  --rr-edge: rgba(22, 136, 154, 0.85);
+  --rr-player: #f5fdff;
+  --rr-glow: rgba(22, 136, 154, 0.45);
+  --rr-ui: rgba(22, 136, 154, 0.9);
   --screen-transition: 300ms;
+  --audio-pulse: 0;
+  --bass-blur: 0px;
+  --bass-shake: 0;
+  --club-hue: 180;
+  --club-flash: 0;
+  --club-pulse: 0;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -50,7 +62,7 @@ a:hover {
 body{
   margin: 0;
   min-width: 320px;
-  padding-bottom: 72px; /* espaÃ¯Â¿Â½o pro footer fixo */
+  padding-bottom: 72px; /* espaï¿½o pro footer fixo */
   min-height: 100vh;
   display: block;          /* importante */
   background: white;
@@ -106,6 +118,205 @@ body.about-open{
 .theme-toggle:focus-visible{
   outline: 3px solid rgba(22, 136, 154, 0.35);
   outline-offset: 2px;
+}
+
+
+.audio-control{
+  position: fixed;
+  top: 78px;
+  right: 28px;
+  z-index: 3200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+body.page-open .audio-control{
+  display: none;
+}
+
+.audio-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(22, 136, 154, 0.35);
+  background: rgba(255,255,255,0.9);
+  color: #16889A;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 12px;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease;
+}
+
+.audio-toggle:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(22, 136, 154, 0.20);
+}
+
+.audio-control.is-active .audio-toggle{
+  background: rgba(22, 136, 154, 0.12);
+  box-shadow: 0 12px 26px rgba(22, 136, 154, 0.22);
+}
+
+.audio-toggle__dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(22, 136, 154, 0.35);
+  box-shadow: 0 0 0 0 rgba(22, 136, 154, 0.0);
+  transition: background-color .2s ease, box-shadow .2s ease;
+}
+
+.audio-control.is-active .audio-toggle__dot{
+  background: #22E4B6;
+  box-shadow: 0 0 12px rgba(34, 228, 182, 0.8);
+}
+
+.audio-panel{
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(22, 136, 154, 0.25);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+  min-width: 240px;
+}
+
+.audio-control.is-open .audio-panel{
+  display: flex;
+}
+
+.audio-panel__title{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.audio-row{
+  display: flex;
+  gap: 8px;
+}
+
+.audio-btn{
+  all: unset;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(22, 136, 154, 0.35);
+  color: #0E6E7C;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  flex: 1 1 auto;
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease, color .12s ease;
+}
+
+.audio-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(22, 136, 154, 0.2);
+}
+
+.audio-start{
+  background: rgba(22, 136, 154, 0.12);
+}
+
+.audio-stop{
+  width: 100%;
+  background: rgba(22, 136, 154, 0.08);
+}
+
+.audio-status{
+  font-size: 12px;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
+
+.theme-dark .audio-toggle,
+.theme-dark .audio-panel{
+  background: rgba(7, 13, 15, 0.85);
+  color: #EAF6F8;
+  border-color: rgba(234, 246, 248, 0.25);
+}
+
+.theme-dark .audio-btn{
+  color: #EAF6F8;
+  border-color: rgba(234, 246, 248, 0.25);
+}
+
+.theme-dark .audio-start,
+.theme-dark .audio-stop{
+  background: rgba(234, 246, 248, 0.08);
+}
+
+body.audio-reactive{
+  filter: brightness(calc(1 + var(--audio-pulse) * 0.45)) saturate(calc(1 + var(--audio-pulse) * 0.25));
+  transition: filter .08s linear;
+}
+
+body::before,
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1200;
+  transition: opacity .08s linear;
+}
+
+body.audio-reactive::before{
+  opacity: calc(var(--club-flash) * 0.55);
+  background:
+    radial-gradient(60% 45% at 20% 20%, hsla(var(--club-hue), 100%, 65%, 0.85), transparent 60%),
+    radial-gradient(55% 40% at 80% 30%, hsla(calc(var(--club-hue) + 120), 100%, 60%, 0.75), transparent 62%),
+    radial-gradient(70% 50% at 50% 80%, hsla(calc(var(--club-hue) + 240), 100%, 55%, 0.7), transparent 65%);
+  mix-blend-mode: screen;
+}
+
+body.audio-reactive::after{
+  opacity: calc(var(--club-pulse) * 0.35);
+  background: linear-gradient(
+    120deg,
+    hsla(calc(var(--club-hue) + 30), 100%, 60%, 0.55),
+    hsla(calc(var(--club-hue) + 160), 100%, 55%, 0.45),
+    hsla(calc(var(--club-hue) + 300), 100%, 60%, 0.5)
+  );
+  mix-blend-mode: screen;
+}
+
+body.audio-reactive #title,
+body.audio-reactive #info,
+body.audio-reactive .nav-btn,
+body.audio-reactive .theme-toggle,
+body.audio-reactive .audio-toggle{
+  text-shadow: 0 0 calc(6px + (var(--audio-pulse) * 16px)) rgba(22, 136, 154, 0.45);
+}
+
+body.audio-reactive #bg-net{
+  filter: none;
+  transition: transform .08s linear;
+}
+
+body.bass-hit #bg-net{
+  animation: bass-shake 0.18s linear infinite;
+}
+
+@keyframes bass-shake{
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(calc(var(--bass-shake) * -6px), calc(var(--bass-shake) * 4px)); }
+  50% { transform: translate(calc(var(--bass-shake) * 5px), calc(var(--bass-shake) * -3px)); }
+  75% { transform: translate(calc(var(--bass-shake) * -4px), calc(var(--bass-shake) * -5px)); }
+  100% { transform: translate(0, 0); }
 }
 
 .toggle-track{
@@ -223,7 +434,7 @@ h1 {
   line-height: 1.1;
 }
 
-/* ===== TransiÃƒÂ§ÃƒÂ£o entre telas ===== */
+/* ===== Transição entre telas ===== */
 .content{
   opacity: 0;
   transform: translateY(14px);
@@ -337,7 +548,7 @@ button:focus-visible {
   display: none;
 }
 
-/* botÃƒÂ£o voltar maior e com mais contraste na pÃƒÂ¡gina de contato */
+/* botão voltar maior e com mais contraste na página de contato */
 #contato .back-btn{
   width: 56px;
   height: 56px;
@@ -369,6 +580,12 @@ button:focus-visible {
   --net-dot: rgba(234, 246, 248, 0.7);
   --net-line: rgba(234, 246, 248, 0.2);
   --net-glow: rgba(234, 246, 248, 0.4);
+  --rr-bg: transparent;
+  --rr-river: #16889A;
+  --rr-edge: rgba(234, 246, 248, 0.65);
+  --rr-player: #f5fdff;
+  --rr-glow: rgba(22, 136, 154, 0.4);
+  --rr-ui: rgba(234, 246, 248, 0.85);
 }
 
 .theme-dark body {
@@ -1041,7 +1258,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 #sobre.content{
   height: 100vh;
   min-height: 100vh;
-  overflow: hidden; /* impede rolagem da pÃƒÂ¡gina inteira */
+  overflow: hidden; /* impede rolagem da página inteira */
   position: fixed;  /* garante "canvas" fixo */
   inset: 0;
   overscroll-behavior: none;
@@ -1076,7 +1293,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 #sobre #rightcontent{
   height: 100%;
   overflow-y: auto;
-  padding: 32px calc(5vw + 10px) 32px 5vw; /* dÃ¡ mais respiro Ã  direita */
+  padding: 32px calc(5vw + 10px) 32px 5vw; /* dá mais respiro   direita */
   box-sizing: border-box;
   scrollbar-gutter: stable; /* evita layout pular com a scrollbar */
   -webkit-overflow-scrolling: touch;
@@ -1108,7 +1325,7 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
   #sobre.content{
   height: 100vh;
   min-height: 100vh;
-  overflow: hidden; /* impede rolagem da pÃƒÂ¡gina inteira */
+  overflow: hidden; /* impede rolagem da página inteira */
   position: fixed;  /* garante "canvas" fixo */
   inset: 0;
   overscroll-behavior: none;
@@ -1204,19 +1421,26 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
     left: 0;
     right: 0;
     z-index: 3001;
-    padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    padding: calc(14px + env(safe-area-inset-top)) 6vw 14px;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
-  .theme-dark #rightcontent.about-text .about-header{
+  #sobre.is-scrolled #rightcontent.about-text .about-header{
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+
+  .theme-dark #sobre.is-scrolled #rightcontent.about-text .about-header{
     background: rgba(7,13,15,0.85);
   }
 
   /* garante espaço para o header fixo no scroll do texto */
   #sobre #rightcontent{
-    padding-top: calc(64px + env(safe-area-inset-top));
+    padding-top: calc(72px + env(safe-area-inset-top));
   }
 }
 
@@ -1241,6 +1465,113 @@ body, .content, #title, #info, .footer, .content #leftcolumn, .content #rightcol
 
 .desc {
   font-size: 40px;
+}
+
+/* ===== River Raid Overlay ===== */
+.rr-overlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999998;
+  pointer-events: none;
+}
+
+.rr-overlay.is-open{
+  display: flex;
+  pointer-events: auto;
+}
+
+.rr-shell{
+  width: var(--rr-size, min(72vmin, 720px));
+  height: var(--rr-size, min(72vmin, 720px));
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  --rr-appear: 0;
+  background: transparent;
+  border: 2px solid rgba(22, 136, 154, 0.65);
+  box-shadow: 0 32px 120px rgba(22, 136, 154, 0.35);
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.rr-overlay.is-open .rr-shell{
+  transform: scale(calc(0.9 + (var(--rr-appear, 0) * 0.1)));
+  opacity: var(--rr-appear, 0);
+}
+
+#rr-canvas{
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
+
+.rr-close{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(22, 136, 154, 0.55);
+  background: rgba(22, 136, 154, 0.25);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.rr-close:hover{
+  background: rgba(22, 136, 154, 0.45);
+}
+
+.rr-hud{
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rr-ui);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rr-hint{
+  opacity: 0.7;
+}
+
+/* ===== UI sair da tela quando River Raid abre ===== */
+.rr-open #render,
+.rr-open .nav-buttons,
+.rr-open .theme-toggle,
+.rr-open #title,
+.rr-open #info,
+.rr-open #microcopy,
+.rr-open .footer,
+.rr-open .content,
+.rr-open #caseOverlay{
+  opacity: 0 !important;
+  transform: translateY(-24px);
+  pointer-events: none !important;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.rr-open body{
+  overflow: hidden;
 }
 
 

@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (currentSection === id) return;
       hideAllSections(id);
       el.style.display = 'block';
-      // forÃ§a reflow para garantir transiÃ§Ã£o
+      // força reflow para garantir transição
       void el.offsetHeight;
       el.classList.add('is-active');
       currentSection = id;
@@ -99,6 +99,248 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ===== Audio Reactive =====
+window.addEventListener('DOMContentLoaded', () => {
+  const audioControl = document.getElementById('audioControl');
+  const audioToggle = document.getElementById('audioToggle');
+  const audioPanel = document.getElementById('audioPanel');
+  const audioStatus = document.getElementById('audioStatus');
+
+  const audioState = {
+    enabled: false,
+    sourceType: null,
+    stream: null,
+    ctx: null,
+    analyser: null,
+    source: null,
+    data: null,
+    freq: null,
+    level: 0,
+    smoothLevel: 0,
+    bassLevel: 0,
+    bassSmooth: 0,
+    bassHitUntil: 0,
+  };
+
+  function setStatus(message) {
+    if (audioStatus) audioStatus.textContent = message;
+  }
+
+  function setUIActive(isActive) {
+    audioControl?.classList.toggle('is-active', isActive);
+    document.body.classList.toggle('audio-reactive', isActive);
+    audioToggle?.setAttribute('aria-pressed', String(isActive));
+  }
+
+  function setPanelOpen(isOpen) {
+    audioControl?.classList.toggle('is-open', isOpen);
+    audioToggle?.setAttribute('aria-expanded', String(isOpen));
+    audioPanel?.setAttribute('aria-hidden', String(!isOpen));
+  }
+
+  async function stopCapture() {
+    if (audioState.stream) {
+      audioState.stream.getTracks().forEach((t) => t.stop());
+    }
+    if (audioState.source) {
+      try { audioState.source.disconnect(); } catch (_) {}
+    }
+    if (audioState.analyser) {
+      try { audioState.analyser.disconnect(); } catch (_) {}
+    }
+    if (audioState.ctx) {
+      try { await audioState.ctx.close(); } catch (_) {}
+    }
+    audioState.enabled = false;
+    audioState.sourceType = null;
+    audioState.stream = null;
+    audioState.ctx = null;
+    audioState.analyser = null;
+    audioState.source = null;
+    audioState.data = null;
+    audioState.freq = null;
+    audioState.level = 0;
+    audioState.smoothLevel = 0;
+    audioState.bassLevel = 0;
+    audioState.bassSmooth = 0;
+    audioState.bassHitUntil = 0;
+    document.body.classList.remove('bass-hit');
+    document.documentElement.style.setProperty('--bass-blur', '0px');
+    document.documentElement.style.setProperty('--bass-shake', '0');
+    setUIActive(false);
+    setStatus('Desativado');
+  }
+
+  function initStream(stream, type) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) {
+      setStatus('WebAudio indisponivel');
+      return;
+    }
+
+    audioState.ctx = new AudioCtx();
+    audioState.analyser = audioState.ctx.createAnalyser();
+    audioState.analyser.fftSize = 1024;
+    audioState.analyser.smoothingTimeConstant = 0.7;
+    audioState.data = new Uint8Array(audioState.analyser.fftSize);
+    audioState.freq = new Uint8Array(audioState.analyser.frequencyBinCount);
+    audioState.source = audioState.ctx.createMediaStreamSource(stream);
+    audioState.source.connect(audioState.analyser);
+
+    audioState.stream = stream;
+    audioState.sourceType = type;
+    audioState.enabled = true;
+
+    setUIActive(true);
+
+    if (audioState.ctx.state === 'suspended') {
+      audioState.ctx.resume().catch(() => {});
+    }
+
+    stream.getTracks().forEach((track) => {
+      track.onended = () => {
+        stopCapture();
+      };
+    });
+  }
+
+  async function startCapture({ auto = false } = {}) {
+    if (!navigator.mediaDevices) {
+      setStatus('Navegador sem suporte');
+      return;
+    }
+
+    await stopCapture();
+
+    try {
+      setStatus(auto ? 'Solicitando permissao de audio...' : 'Ativando modo musica...');
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+        },
+      });
+
+      initStream(stream, 'display');
+      setStatus('Capturando audio do sistema');
+    } catch (err) {
+      console.warn('[AudioReactive] Falha ao iniciar captura', err);
+      setStatus('Permissao negada');
+      setUIActive(false);
+    }
+  }
+
+  async function startMicCapture() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setStatus('Microfone indisponivel');
+      return;
+    }
+    await stopCapture();
+    try {
+      setStatus('Ativando microfone...');
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+        },
+      });
+      initStream(stream, 'mic');
+      setStatus('Capturando microfone');
+    } catch (err) {
+      console.warn('[AudioReactive] Falha ao iniciar microfone', err);
+      setStatus('Permissao negada');
+      setUIActive(false);
+    }
+  }
+
+  function updateAudioAnalysis() {
+    if (!audioState.enabled || !audioState.analyser || !audioState.data) {
+      audioState.level = 0;
+      audioState.smoothLevel *= 0.9;
+      audioState.bassSmooth *= 0.9;
+      document.documentElement.style.setProperty('--audio-pulse', audioState.smoothLevel.toFixed(3));
+      document.documentElement.style.setProperty('--bass-blur', `${(audioState.bassSmooth * 8).toFixed(2)}px`);
+      document.documentElement.style.setProperty('--bass-shake', audioState.bassSmooth.toFixed(3));
+      if (audioState.bassHitUntil && performance.now() > audioState.bassHitUntil) {
+        document.body.classList.remove('bass-hit');
+      }
+      return;
+    }
+
+    audioState.analyser.getByteTimeDomainData(audioState.data);
+    audioState.analyser.getByteFrequencyData(audioState.freq);
+
+    let sum = 0;
+    for (let i = 0; i < audioState.data.length; i += 1) {
+      const v = (audioState.data[i] - 128) / 128;
+      sum += v * v;
+    }
+    const rms = Math.sqrt(sum / audioState.data.length);
+    const level = Math.min(1, rms * 2.6);
+    audioState.level = level;
+    audioState.smoothLevel = audioState.smoothLevel * 0.6 + level * 0.4;
+
+    let bassSum = 0;
+    const bassBins = Math.max(6, Math.floor(audioState.freq.length * 0.08));
+    for (let i = 0; i < bassBins; i += 1) {
+      bassSum += audioState.freq[i];
+    }
+    const bassAvg = bassSum / bassBins;
+    const bassLevel = Math.min(1, (bassAvg / 255) * 2.4);
+    audioState.bassLevel = bassLevel;
+    audioState.bassSmooth = audioState.bassSmooth * 0.65 + bassLevel * 0.35;
+
+    const now = performance.now();
+    if (bassLevel > 0.48) {
+      audioState.bassHitUntil = now + 180;
+    }
+    if (audioState.bassHitUntil && now < audioState.bassHitUntil) {
+      document.body.classList.add('bass-hit');
+    } else {
+      document.body.classList.remove('bass-hit');
+    }
+
+    document.documentElement.style.setProperty('--audio-pulse', audioState.smoothLevel.toFixed(3));
+    document.documentElement.style.setProperty('--bass-blur', `${(audioState.bassSmooth * 10).toFixed(2)}px`);
+    document.documentElement.style.setProperty('--bass-shake', audioState.bassSmooth.toFixed(3));
+  }
+
+  audioState.update = updateAudioAnalysis;
+  window.__audioReactive = audioState;
+
+  audioToggle?.addEventListener('click', (e) => {
+    e.preventDefault();
+    setPanelOpen(!audioControl?.classList.contains('is-open'));
+  });
+
+  audioPanel?.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+
+    if (target.dataset.action === 'start-display') {
+      startCapture();
+      setPanelOpen(true);
+    }
+    if (target.dataset.action === 'start-mic') {
+      startMicCapture();
+      setPanelOpen(true);
+    }
+    if (target.dataset.action === 'stop') {
+      stopCapture();
+      setPanelOpen(false);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!audioControl || audioControl.contains(e.target)) return;
+    setPanelOpen(false);
+  });
+
+  setStatus('Desativado');
+});
 // ===== Case Modal (Portfolio) =====
 window.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('caseOverlay');
@@ -111,13 +353,13 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Conte�dos
+  // Conteï¿½dos
     const CASES = {
     lastampa: {
       title: 'La Stampa Run',
       meta: ['Branding', 'UX/UI', 'Experiência', 'Growth'],
       intro:
-        'La Estampa Run foi um evento proprietário desenvolvido como um produto de experiência, exigindo a criação de um ecossistema completo de marca — do digital ao físico — com foco em posicionamento, conversão e percepção de valor.',
+        'La Estampa Run foi um evento proprietário desenvolvido como um produto de experiência, exigindo a criação de um ecossistema completo de marca ? do digital ao físico ? com foco em posicionamento, conversão e percepção de valor.',
       sections: [
         {
           h2: 'Contexto',
@@ -129,7 +371,7 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         {
           h2: 'Minha atuação',
-          p: 'Atuei de forma estratégica e operacional na concepção da identidade visual, no design da experiência digital e na integração entre produto, comunicação e materiais físicos. Desenvolvi landing pages orientadas à jornada do usuário, criei sistemas visuais escaláveis e garanti consistência entre interfaces, campanhas, motion e itens físicos do evento.',
+          p: 'Atuei de forma estratégica e operacional na concepção da identidade visual, no design da experiência digital e na integração entre produto, comunicação e materiais físicos. Desenvolvi landing pages orientadas   jornada do usuário, criei sistemas visuais escaláveis e garanti consistência entre interfaces, campanhas, motion e itens físicos do evento.',
         },
         {
           h2: 'Resultado',
@@ -152,7 +394,7 @@ window.addEventListener('DOMContentLoaded', () => {
       title: 'Unidentis',
       meta: ['CRO', 'Healthtech', 'Compliance'],
       intro:
-        'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível à confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas à conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
+        'A Unidentis atua no setor de saúde, um contexto altamente regulado e sensível   confiança do usuário. O projeto envolveu a criação de materiais visuais e animações voltadas   conversão em ambientes de redes sociais, equilibrando impacto visual, clareza de mensagem e responsabilidade na comunicação.',
       sections: [
         {
           h2: 'Contexto',
@@ -162,12 +404,12 @@ window.addEventListener('DOMContentLoaded', () => {
         {
           h2: 'O desafio',
           p:
-            'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar à conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.'
+            'Criar anúncios e motions capazes de captar atenção rapidamente no feed, transmitir confiança e orientar   conversão, sem recorrer a mensagens agressivas ou promessas exageradas comuns no segmento.'
         },
         {
           h2: 'Minha atuação',
           p:
-            'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas à performance e escalabilidade. Estruturando o setor de marketing da Unidentis '
+            'Fui responsável pela criação de criativos estáticos e motion design para campanhas em Feed, Stories e Reels, trabalhando narrativa curta, hierarquia visual e variações criativas voltadas   performance e escalabilidade. Estruturando o setor de marketing da Unidentis '
         },
         {
           h2: 'Resultado',
@@ -191,7 +433,7 @@ window.addEventListener('DOMContentLoaded', () => {
       title: 'Meltz Burger',
       meta: ['Branding', 'Marketing', 'Performance', 'Food Service'],
       intro:
-        'A Meltz Burger é um projeto de hamburgueria artesanal desenvolvido com foco em identidade, comunicação e performance, explorando design como ferramenta para gerar desejo, reconhecimento de marca e apoio direto às estratégias de venda em um mercado altamente competitivo.',
+        'A Meltz Burger é um projeto de hamburgueria artesanal desenvolvido com foco em identidade, comunicação e performance, explorando design como ferramenta para gerar desejo, reconhecimento de marca e apoio direto  s estratégias de venda em um mercado altamente competitivo.',
       sections: [
         {
           h2: 'Contexto',
@@ -203,7 +445,7 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         {
           h2: 'Minha atuação',
-          p: 'Atuei no desenvolvimento da identidade visual, direção criativa e criação de materiais para redes sociais e campanhas promocionais, focando em linguagem visual forte, consistência de marca e estímulo à decisão de compra.',
+          p: 'Atuei no desenvolvimento da identidade visual, direção criativa e criação de materiais para redes sociais e campanhas promocionais, focando em linguagem visual forte, consistência de marca e estímulo   decisão de compra.',
         },
         {
           h2: 'Resultado',
@@ -226,7 +468,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   /* =========================
      PORTFOLIO SCROLL STATE
-     (ativa blur do header s� quando rolar)
+     (ativa blur do header sï¿½ quando rolar)
      ========================= */
   const portfolio = document.getElementById('portfolio');
   if (portfolio) {
@@ -237,6 +479,20 @@ window.addEventListener('DOMContentLoaded', () => {
       },
       { passive: true }
     );
+  }
+
+  /* =========================
+     ABOUT (SOBRE) SCROLL STATE
+     (ativa blur do header sï¿½ quando rolar)
+     ========================= */
+  const sobre = document.getElementById('sobre');
+  const aboutScroll = document.querySelector('#sobre #rightcontent');
+  if (sobre && aboutScroll) {
+    const updateAboutScrollState = () => {
+      sobre.classList.toggle('is-scrolled', aboutScroll.scrollTop > 4);
+    };
+    aboutScroll.addEventListener('scroll', updateAboutScrollState, { passive: true });
+    updateAboutScrollState();
   }
 
   let isOpen = false;
@@ -262,8 +518,8 @@ window.addEventListener('DOMContentLoaded', () => {
         )
         .join('') ?? '';
 
-    // ? Suporta o novo "media" (imagem + v�deo)
-    // ?? E mant�m compat�vel com cases antigos que usam "images"
+    // ? Suporta o novo "media" (imagem + vï¿½deo)
+    // ?? E mantï¿½m compatï¿½vel com cases antigos que usam "images"
     const mediaArray = Array.isArray(c.media)
       ? c.media
       : Array.isArray(c.images)
@@ -346,7 +602,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!isOpen) return;
     isOpen = false;
 
-    // pausa v�deos quando fecha (UX)
+    // pausa vï¿½deos quando fecha (UX)
     content.querySelectorAll('video').forEach((v) => v.pause());
 
     overlay.classList.remove('is-open');
@@ -354,7 +610,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.documentElement.style.overflow = '';
   }
 
-  // ? UX: ao dar play em um v�deo, pausa os outros
+  // ? UX: ao dar play em um vï¿½deo, pausa os outros
   content.addEventListener(
     'play',
     (e) => {
@@ -377,7 +633,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // fechar: bot�o X
+  // fechar: botï¿½o X
   closeBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -403,11 +659,28 @@ window.addEventListener('DOMContentLoaded', () => {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  const mouse = { x: -9999, y: -9999, active: false };
+  const rrOverlay = document.getElementById('rrOverlay');
+  const rrCanvas = document.getElementById('rr-canvas');
+  const rrClose = rrOverlay?.querySelector('.rr-close');
+  const rrShell = rrOverlay?.querySelector('.rr-shell');
+
   const points = [];
+  let hotPointIndex = 0;
+  let portalOpen = false;
+  let squareTargets = [];
+  let portalSquares = [];
   let width = 0;
   let height = 0;
   let colors = { line: 'rgba(22,136,154,0.18)', dot: 'rgba(22,136,154,0.6)', glow: 'rgba(22,136,154,0.35)' };
+  let rrColors = {
+    bg: 'transparent',
+    river: '#16889A',
+    edge: 'rgba(22,136,154,0.85)',
+    player: '#f5fdff',
+    glow: 'rgba(22,136,154,0.35)',
+    ui: 'rgba(22,136,154,0.9)',
+  };
+  const portalAnim = { start: 0, progress: 0, reveal: 0 };
 
   function readColors() {
     const styles = getComputedStyle(document.documentElement);
@@ -415,6 +688,15 @@ window.addEventListener('DOMContentLoaded', () => {
       line: styles.getPropertyValue('--net-line').trim() || colors.line,
       dot: styles.getPropertyValue('--net-dot').trim() || colors.dot,
       glow: styles.getPropertyValue('--net-glow').trim() || colors.glow,
+    };
+    const accentBlue = styles.getPropertyValue('--accent-blue').trim();
+    rrColors = {
+      bg: styles.getPropertyValue('--rr-bg').trim() || rrColors.bg,
+      river: styles.getPropertyValue('--rr-river').trim() || rrColors.river,
+      edge: accentBlue || styles.getPropertyValue('--rr-edge').trim() || rrColors.edge,
+      player: accentBlue || styles.getPropertyValue('--rr-player').trim() || rrColors.player,
+      glow: styles.getPropertyValue('--rr-glow').trim() || rrColors.glow,
+      ui: accentBlue || styles.getPropertyValue('--rr-ui').trim() || rrColors.ui,
     };
   }
 
@@ -428,6 +710,88 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     buildPoints();
+    if (portalOpen) {
+      setPortalTargets();
+      setOverlaySize();
+      resizeGame();
+    }
+  }
+
+  function setOverlaySize() {
+    if (!rrShell) return;
+    const size = Math.min(width, height) * 0.62;
+    rrShell.style.setProperty('--rr-size', `${size}px`);
+  }
+
+  function setPortalTargets() {
+    const size = Math.min(width, height) * 0.62;
+    const cx = width / 2;
+    const cy = height / 2;
+    const ringScales = [1];
+    portalSquares = ringScales.map((scale) => ({ cx, cy, size: size * scale }));
+
+    const half = size / 2;
+    squareTargets = points.map((_, i) => {
+      const ringIndex = i % ringScales.length;
+      const ringSize = size * ringScales[ringIndex];
+      const ringHalf = ringSize / 2;
+      const ringCount = Math.max(1, Math.ceil(points.length / ringScales.length) - 1);
+      const t = Math.floor(i / ringScales.length) / ringCount;
+      const p = t * 4;
+      let x = cx;
+      let y = cy;
+
+      if (p < 1) {
+        x = cx - ringHalf + ringSize * p;
+        y = cy - ringHalf;
+      } else if (p < 2) {
+        x = cx + ringHalf;
+        y = cy - ringHalf + ringSize * (p - 1);
+      } else if (p < 3) {
+        x = cx + ringHalf - ringSize * (p - 2);
+        y = cy + ringHalf;
+      } else {
+        x = cx - ringHalf;
+        y = cy + ringHalf - ringSize * (p - 3);
+      }
+      return { x, y };
+    });
+  }
+
+  function isHotHit(x, y) {
+    const p = points[hotPointIndex];
+    if (!p) return false;
+    const dx = x - p.x;
+    const dy = y - p.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    return dist < Math.max(12, p.r * 6);
+  }
+
+  function openPortal() {
+    if (portalOpen) return;
+    portalOpen = true;
+    portalAnim.start = performance.now();
+    portalAnim.progress = 0;
+    portalAnim.reveal = 0;
+    document.documentElement.classList.add('rr-open');
+    rrOverlay?.classList.add('is-open');
+    rrOverlay?.setAttribute('aria-hidden', 'false');
+    setPortalTargets();
+    setOverlaySize();
+    startGame();
+  }
+
+  function closePortal() {
+    if (!portalOpen) return;
+    portalOpen = false;
+    portalAnim.progress = 0;
+    portalAnim.reveal = 0;
+    rrShell?.style.setProperty('--rr-appear', '0');
+    document.documentElement.classList.remove('rr-open');
+    rrOverlay?.classList.remove('is-open');
+    rrOverlay?.setAttribute('aria-hidden', 'true');
+    stopGame();
+    buildPoints();
   }
 
   function buildPoints() {
@@ -435,34 +799,229 @@ window.addEventListener('DOMContentLoaded', () => {
     const count = Math.max(36, Math.min(140, Math.floor(area / 14000)));
     points.length = 0;
     for (let i = 0; i < count; i += 1) {
+      const baseR = 1.2 + Math.random() * 1.8;
       points.push({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
-        r: 1.2 + Math.random() * 1.8,
+        ox: (Math.random() - 0.5) * 90,
+        oy: (Math.random() - 0.5) * 90,
+        r: baseR,
+        baseR,
       });
+    }
+
+    if (points.length) {
+      hotPointIndex = Math.floor(Math.random() * points.length);
+      points[hotPointIndex].isHot = true;
+      points[hotPointIndex].r = Math.max(points[hotPointIndex].r, 3.2);
+      points[hotPointIndex].baseR = points[hotPointIndex].r;
     }
   }
 
-  function handleMove(x, y) {
-    mouse.x = x;
-    mouse.y = y;
-    mouse.active = true;
+  const game = {
+    running: false,
+    raf: 0,
+    lastTime: 0,
+    ctx: rrCanvas ? rrCanvas.getContext('2d') : null,
+    width: 0,
+    height: 0,
+    dpr: 1,
+    input: { left: false, right: false },
+    player: { x: 0, y: 0, size: 18 },
+    segments: [],
+    speed: 120,
+    status: 'ready',
+  };
+
+  function resizeGame() {
+    if (!rrCanvas || !rrShell || !game.ctx) return;
+    const rect = rrShell.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    game.dpr = dpr;
+    game.width = rect.width;
+    game.height = rect.height;
+    rrCanvas.width = rect.width * dpr;
+    rrCanvas.height = rect.height * dpr;
+    rrCanvas.style.width = `${rect.width}px`;
+    rrCanvas.style.height = `${rect.height}px`;
+    game.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initGame();
   }
 
-  window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-  window.addEventListener('mouseleave', () => { mouse.active = false; });
-  window.addEventListener(
-    'touchmove',
-    (e) => {
-      const touch = e.touches?.[0];
-      if (touch) handleMove(touch.clientX, touch.clientY);
-    },
-    { passive: true }
-  );
-  window.addEventListener('touchend', () => { mouse.active = false; });
+  function initGame() {
+    if (!game.ctx) return;
+    game.segments = [];
+    game.input.left = false;
+    game.input.right = false;
+    game.player.x = game.width / 2;
+    game.player.y = game.height * 0.78;
+    game.status = 'run';
+
+    const gap = 26;
+    const count = Math.ceil(game.height / gap) + 6;
+    let prev = null;
+    for (let i = 0; i < count; i += 1) {
+      const y = -gap * 2 + i * gap;
+      const seg = makeSegment(prev, y);
+      game.segments.push(seg);
+      prev = seg;
+    }
+  }
+
+  function makeSegment(prev, y) {
+    const margin = 40;
+    const minW = game.width * 0.38;
+    const maxW = game.width * 0.62;
+    const baseW = prev ? prev.width : game.width * 0.52;
+    const baseC = prev ? prev.center : game.width / 2;
+    const width = clamp(baseW + rand(-28, 28), minW, maxW);
+    const center = clamp(baseC + rand(-32, 32), margin + width / 2, game.width - margin - width / 2);
+    return { y, center, width };
+  }
+
+  function rand(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function getBoundsAt(y) {
+    const sorted = [...game.segments].sort((a, b) => a.y - b.y);
+    for (let i = 0; i < sorted.length - 1; i += 1) {
+      const a = sorted[i];
+      const b = sorted[i + 1];
+      if (y >= a.y && y <= b.y) {
+        const t = (y - a.y) / (b.y - a.y || 1);
+        const center = a.center + (b.center - a.center) * t;
+        const width = a.width + (b.width - a.width) * t;
+        return { left: center - width / 2, right: center + width / 2 };
+      }
+    }
+    const last = sorted[sorted.length - 1];
+    return { left: last.center - last.width / 2, right: last.center + last.width / 2 };
+  }
+
+  function updateGame(dt) {
+    if (game.status !== 'run') return;
+    const gap = 26;
+    const speed = game.speed * dt;
+
+    for (const seg of game.segments) {
+      seg.y += speed;
+    }
+
+    game.segments = game.segments.filter((seg) => seg.y < game.height + gap);
+    const top = game.segments.reduce((min, s) => (s.y < min.y ? s : min), game.segments[0]);
+    while (game.segments.length < Math.ceil(game.height / gap) + 6) {
+      const y = top.y - gap;
+      const seg = makeSegment(top, y);
+      game.segments.push(seg);
+    }
+
+    const move = 240 * dt;
+    if (game.input.left) game.player.x -= move;
+    if (game.input.right) game.player.x += move;
+
+    const bounds = getBoundsAt(game.player.y);
+    const margin = 12;
+    if (game.player.x < bounds.left + margin || game.player.x > bounds.right - margin) {
+      game.status = 'crash';
+    }
+  }
+
+  function drawGame() {
+    if (!game.ctx) return;
+    const ctx = game.ctx;
+    ctx.clearRect(0, 0, game.width, game.height);
+
+    const sorted = [...game.segments].sort((a, b) => a.y - b.y);
+    ctx.strokeStyle = rrColors.edge;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (const seg of sorted) {
+      ctx.lineTo(seg.center - seg.width / 2, seg.y);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (const seg of sorted) {
+      ctx.lineTo(seg.center + seg.width / 2, seg.y);
+    }
+    ctx.stroke();
+
+    const p = game.player;
+    ctx.strokeStyle = rrColors.edge;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y - p.size);
+    ctx.lineTo(p.x - p.size * 0.7, p.y + p.size);
+    ctx.lineTo(p.x + p.size * 0.7, p.y + p.size);
+    ctx.closePath();
+    ctx.stroke();
+
+    if (game.status === 'crash') {
+      ctx.strokeStyle = rrColors.ui;
+      ctx.lineWidth = 1.5;
+      ctx.font = '700 20px "M PLUS Rounded 1c", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.strokeText('Game Over', game.width / 2, game.height / 2 - 8);
+      ctx.font = '400 12px "M PLUS Rounded 1c", sans-serif';
+      ctx.strokeText('Pressione X para fechar', game.width / 2, game.height / 2 + 16);
+    }
+  }
+
+  function gameLoop(ts) {
+    if (!game.running) return;
+    const now = ts || performance.now();
+    const dt = Math.min(0.033, (now - game.lastTime) / 1000);
+    game.lastTime = now;
+    updateGame(dt);
+    drawGame();
+    game.raf = requestAnimationFrame(gameLoop);
+  }
+
+  function startGame() {
+    if (!game.ctx) return;
+    resizeGame();
+    game.running = true;
+    game.lastTime = performance.now();
+    gameLoop(game.lastTime);
+  }
+
+  function stopGame() {
+    game.running = false;
+    if (game.raf) cancelAnimationFrame(game.raf);
+  }
+
   window.addEventListener('resize', resize);
+
+  window.addEventListener('pointerdown', (e) => {
+    if (portalOpen) return;
+    if (isHotHit(e.clientX, e.clientY)) {
+      openPortal();
+    }
+  });
+
+  rrClose?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closePortal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (!portalOpen) return;
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') game.input.left = true;
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') game.input.right = true;
+    if (e.key === 'Escape' || e.key === 'x' || e.key === 'X') closePortal();
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (!portalOpen) return;
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') game.input.left = false;
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') game.input.right = false;
+  });
 
   new MutationObserver(readColors).observe(document.documentElement, {
     attributes: true,
@@ -472,61 +1031,176 @@ window.addEventListener('DOMContentLoaded', () => {
   readColors();
   resize();
 
-  function animate() {
+  function drawSquareProgress(ctx2d, cx, cy, size, t) {
+    if (t <= 0) return;
+    const half = size / 2;
+    const total = size * 4;
+    let remaining = Math.min(total, total * t);
+
+    function drawLine(x1, y1, x2, y2, length) {
+      if (remaining <= 0) return;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const step = Math.min(remaining, dist, length);
+      const ratio = dist ? step / dist : 0;
+      ctx2d.beginPath();
+      ctx2d.moveTo(x1, y1);
+      ctx2d.lineTo(x1 + dx * ratio, y1 + dy * ratio);
+      ctx2d.stroke();
+      remaining -= step;
+    }
+
+    const x1 = cx - half;
+    const y1 = cy - half;
+    const x2 = cx + half;
+    const y2 = cy + half;
+
+    drawLine(x1, y1, x2, y1, size);
+    drawLine(x2, y1, x2, y2, size);
+    drawLine(x2, y2, x1, y2, size);
+    drawLine(x1, y2, x1, y1, size);
+  }
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+    function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    const linkDist = Math.min(150, Math.max(90, Math.sqrt(width * height) / 10));
-    const mouseRange = 140;
+    const audioState = window.__audioReactive;
+    audioState?.update?.();
+    const audioOn = Boolean(audioState?.enabled) && !portalOpen;
+    const audioLevel = audioState?.smoothLevel ?? 0;
+    const waveData = audioState?.data;
 
-    for (const p of points) {
-      p.x += p.vx;
-      p.y += p.vy;
+    const now = performance.now();
+    const portalT = portalOpen ? Math.min(1, (now - portalAnim.start) / 1200) : 0;
+    const revealT = portalOpen ? Math.min(1, Math.max(0, (portalT - 0.35) / 0.65)) : 0;
+    portalAnim.progress = portalT;
+    portalAnim.reveal = revealT;
+    if (rrShell) rrShell.style.setProperty('--rr-appear', revealT.toFixed(3));
 
-      if (p.x <= 0 || p.x >= width) p.vx *= -1;
-      if (p.y <= 0 || p.y >= height) p.vy *= -1;
+    const baseLink = Math.min(150, Math.max(90, Math.sqrt(width * height) / 10));
+    const linkDist = portalOpen ? baseLink * (0.35 + portalT * 0.5) : baseLink;
+    const time = now * 0.002;
+    const hotColor = `hsl(${(time * 80) % 360}, 100%, 60%)`;
+    const gatherT = easeOutCubic(Math.min(1, portalT / 0.45));
+    const squareT = easeInOutCubic(Math.max(0, (portalT - 0.25) / 0.65));
+    const settleT = easeOutCubic(Math.max(0, (portalT - 0.65) / 0.35));
+    const lineT = portalOpen ? 0.2 + squareT * 0.8 : 1;
 
-      if (mouse.active) {
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        if (dist < mouseRange) {
-          const force = (mouseRange - dist) / mouseRange;
-          p.vx += (dx / dist) * force * 0.05;
-          p.vy += (dy / dist) * force * 0.05;
-        }
+    if (audioOn && waveData?.length) {
+      const margin = Math.max(24, width * 0.08);
+      const span = Math.max(1, width - margin * 2);
+      const centerY = height * 0.5;
+      const bassBoost = audioState?.bassSmooth ?? 0;
+      const amp = height * 0.28 + audioLevel * height * 0.6 + bassBoost * height * 0.22;
+      const count = Math.max(1, points.length - 1);
+
+      for (let i = 0; i < points.length; i += 1) {
+        const p = points[i];
+        const t = count ? i / count : 0;
+        const sampleIndex = Math.floor(t * (waveData.length - 1));
+        const sample = (waveData[sampleIndex] - 128) / 128;
+        const targetX = margin + span * t;
+        const targetY = centerY + sample * amp;
+        const response = 0.32 + audioLevel * 0.35;
+        p.x += (targetX - p.x) * 0.28;
+        p.y += (targetY - p.y) * response;
       }
-    }
 
-    ctx.lineWidth = 1;
-    for (let i = 0; i < points.length; i += 1) {
-      for (let j = i + 1; j < points.length; j += 1) {
-        const a = points[i];
-        const b = points[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < linkDist) {
-          const alpha = 1 - dist / linkDist;
-          ctx.globalAlpha = alpha;
-          ctx.strokeStyle = colors.line;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = colors.dot;
-    ctx.shadowColor = colors.glow;
-    ctx.shadowBlur = 8;
-    for (const p of points) {
+      const waveHue = (now * 0.06 + audioLevel * 160) % 360;
+      ctx.lineWidth = 2 + audioLevel * 2.2;
+      ctx.globalAlpha = 0.6 + audioLevel * 0.4;
+      ctx.strokeStyle = `hsla(${waveHue}, 80%, 62%, ${0.35 + audioLevel * 0.5})`;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      for (let i = 0; i < points.length; i += 1) {
+        const p = points[i];
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    } else {
+      for (let i = 0; i < points.length; i += 1) {
+        const p = points[i];
+        if (portalOpen && squareTargets[i]) {
+          const cx = width / 2;
+          const cy = height / 2;
+          const clusterX = cx + p.ox * (1 - gatherT);
+          const clusterY = cy + p.oy * (1 - gatherT);
+          const targetX = clusterX + (squareTargets[i].x - clusterX) * squareT;
+          const targetY = clusterY + (squareTargets[i].y - clusterY) * squareT;
+          const pull = 0.06 + squareT * 0.14 + settleT * 0.06;
+          p.x += (targetX - p.x) * pull;
+          p.y += (targetY - p.y) * pull;
+        } else {
+          p.x += p.vx;
+          p.y += p.vy;
+        }
+
+        if (p.x <= 0 || p.x >= width) p.vx *= -1;
+        if (p.y <= 0 || p.y >= height) p.vy *= -1;
+      }
+
+      ctx.lineWidth = 1;
+      for (let i = 0; i < points.length; i += 1) {
+        for (let j = i + 1; j < points.length; j += 1) {
+          const a = points[i];
+          const b = points[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < linkDist) {
+            const alpha = 1 - dist / linkDist;
+            ctx.globalAlpha = alpha * lineT;
+            ctx.strokeStyle = colors.line;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.shadowBlur = 8;
+    for (let i = 0; i < points.length; i += 1) {
+      const p = points[i];
+      const radius = (p.baseR ?? p.r) + audioLevel * 2;
+      if (!audioOn && p.isHot) {
+        ctx.fillStyle = hotColor;
+        ctx.shadowColor = hotColor;
+        ctx.shadowBlur = 18;
+      } else {
+        ctx.fillStyle = colors.dot;
+        ctx.shadowColor = colors.glow;
+        ctx.shadowBlur = 8;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.shadowBlur = 0;
+
+    if (audioOn) {
+      const hue = (now * 0.08 + (audioState?.bassSmooth ?? 0) * 180) % 360;
+      const flash = Math.min(1, (audioState?.bassSmooth ?? 0) * 1.7 + audioLevel * 0.7);
+      const pulse = 0.2 + audioLevel * 0.8;
+      document.documentElement.style.setProperty('--club-hue', hue.toFixed(1));
+      document.documentElement.style.setProperty('--club-flash', flash.toFixed(3));
+      document.documentElement.style.setProperty('--club-pulse', pulse.toFixed(3));
+    } else {
+      document.documentElement.style.setProperty('--club-flash', '0');
+      document.documentElement.style.setProperty('--club-pulse', '0');
+    }
 
     requestAnimationFrame(animate);
   }
